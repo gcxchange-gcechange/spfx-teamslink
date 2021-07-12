@@ -1,0 +1,21 @@
+@import '~office-ui-fabric-react/dist/sass/References.scss';
+.actionsLink {
+  outline: transparent;
+    position: relative;
+    font-family: "Segoe UI", "Segoe UI Web (West European)", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    font-size: 14px;
+    font-weight: 400;
+    box-sizing: border-box;
+    border: 1px solid transparent;
+    display: inline-block;
+    text-decoration: none;
+    text-align: center;
+    cursor: pointer;
+    padding: 0px 4px;
+    border-radius: 2px;
+    margin-left: 7px;
+    color: rgb(255, 255, 255);
+    background-color: transparent;
+    user-select: none;
+}

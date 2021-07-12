@@ -1,0 +1,29 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/core-build/serve.schema.json",
+  "port": 4321,
+  "https": true,
+  "serveConfigurations": {
+    "default": {
+      "pageUrl": "https://tbssctdev.sharepoint.com/teams/1000865/",
+      "customActions": {
+        "028e8be1-e238-4ec7-8384-adfc3dae0fd1": {
+          "location": "ClientSideExtension.ApplicationCustomizer",
+          "properties": {
+            "testMessage": "Test message"
+          }
+        }
+      }
+    },
+    "teamsLink": {
+      "pageUrl": "https://tbssctdev.sharepoint.com/teams/1000865/",
+      "customActions": {
+        "028e8be1-e238-4ec7-8384-adfc3dae0fd1": {
+          "location": "ClientSideExtension.ApplicationCustomizer",
+          "properties": {
+            "testMessage": "Test message"
+          }
+        }
+      }
+    }
+  }
+}

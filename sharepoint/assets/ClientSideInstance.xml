@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Elements xmlns="http://schemas.microsoft.com/sharepoint/">
+    <ClientSideComponentInstance
+        Title="TeamsLink"
+        Location="ClientSideExtension.ApplicationCustomizer"
+        ComponentId="028e8be1-e238-4ec7-8384-adfc3dae0fd1"
+        Properties="{&quot;testMessage&quot;:&quot;Test message&quot;}">
+    </ClientSideComponentInstance>
+</Elements>
