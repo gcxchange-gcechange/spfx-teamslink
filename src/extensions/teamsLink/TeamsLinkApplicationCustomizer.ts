@@ -27,7 +27,7 @@ export default class TeamsLinkApplicationCustomizer
     });
 
     // Check if a community site
-    if(!this.context.pageContext.legacyPageContext.isHubSite && (this.context.pageContext.legacyPageContext.hubSiteId == "688cb2b9-e071-4b25-ad9c-2b0dca2b06ba" || this.context.pageContext.legacyPageContext.hubSiteId == "fc6c0ac6-b659-4433-b74e-b48813cf333c")){
+    if(!this.context.pageContext.legacyPageContext.isHubSite && (this.context.pageContext.legacyPageContext.hubSiteId == "688cb2b9-e071-4b25-ad9c-2b0dca2b06ba" || this.context.pageContext.legacyPageContext.hubSiteId == "ab266fda-839c-4854-a682-72b52934ce40")){
       let teamsUrl = await this.getTeamURL();
       let isMember = await this.isMember();
 
