@@ -5,6 +5,7 @@
     "id": "5f81c107-6362-4582-901d-53a0278eb9f7",
     "version": "1.0.0.0",
     "includeClientSideAssets": true,
+    "skipFeatureDeployment": true,
     "isDomainIsolated": false,
     "developer": {
       "name": "",
@@ -31,6 +32,18 @@
       {
         "resource": "Microsoft Graph",
         "scope": "User.ReadBasic.All"
+      },
+      {
+        "resource": "Microsoft Graph",
+        "scope": "Teams.ReadBasic.All"
+      },
+      {
+        "resource": "Microsoft Graph",
+        "scope": "Team.ReadBasic.All"
+      },
+      {
+        "resource": "Microsoft Graph",
+        "scope": "Channel.ReadBasic.All"
       }
     ]
   },

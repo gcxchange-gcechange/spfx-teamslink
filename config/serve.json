@@ -4,7 +4,7 @@
   "https": true,
   "serveConfigurations": {
     "default": {
-      "pageUrl": "https://tbssctdev.sharepoint.com/teams/1000865/",
+      "pageUrl": "https://gcxgcedev.sharepoint.com/teams/EthanTest",
       "customActions": {
         "028e8be1-e238-4ec7-8384-adfc3dae0fd1": {
           "location": "ClientSideExtension.ApplicationCustomizer",
@@ -15,7 +15,7 @@
       }
     },
     "teamsLink": {
-      "pageUrl": "https://tbssctdev.sharepoint.com/teams/1000865/",
+      "pageUrl": "https://gcxgcedev.sharepoint.com/teams/EthanTest",
       "customActions": {
         "028e8be1-e238-4ec7-8384-adfc3dae0fd1": {
           "location": "ClientSideExtension.ApplicationCustomizer",
