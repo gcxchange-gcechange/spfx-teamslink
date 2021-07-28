@@ -18,4 +18,8 @@
     color: inherit;
     background-color: transparent;
     user-select: none;
+
+    &:focus {
+      outline: 1px solid;
+    }
 }
