@@ -48,13 +48,18 @@ export default class TeamsLinkApplicationCustomizer
               actionLink.href = teamsUrl;
               actionLink.className = styles.actionsLink;
 
+              let spacer = document.createElement("span");
+              spacer.className = styles.spacer;
+              spacer.innerText = "|"
+
               if(isMember){
                 actionLink.innerText = "Conversations";
               } else {
                 actionLink.innerText = strings.become;
               }
 
-              siteHeader.querySelector('[class^="actionsWrapper-"]').append(actionLink);
+              siteHeader.querySelector('[class^="actionsWrapper-"]').prepend(spacer);
+              siteHeader.querySelector('[class^="actionsWrapper-"]').prepend(actionLink);
 
             // Mobile size
             } else if(added_node.isSameNode(siteHeader.querySelector('[class^="sideActionsWrapper-"]'))) {
@@ -92,16 +97,20 @@ export default class TeamsLinkApplicationCustomizer
     actionLink.href = teamsUrl;
     actionLink.className = styles.actionsLink;
 
+    let spacer = document.createElement("span");
+    spacer.className = styles.spacer;
+    spacer.innerText = "|"
+
     if(isMember){
       actionLink.innerText = "Conversations";
     } else {
       actionLink.innerText = strings.become;
     }
 
-
     let actionsBar = document.querySelector('[class^="actionsWrapper-"]');
     if(actionsBar){
-      actionsBar.append(actionLink);
+      actionsBar.prepend(spacer);
+      actionsBar.prepend(actionLink);
     } else {
       document.querySelector('[class^="sideActionsWrapper-"]').append(actionLink)
     }
