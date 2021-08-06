@@ -35,10 +35,6 @@
       },
       {
         "resource": "Microsoft Graph",
-        "scope": "Teams.ReadBasic.All"
-      },
-      {
-        "resource": "Microsoft Graph",
         "scope": "Team.ReadBasic.All"
       },
       {
