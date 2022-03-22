@@ -40,6 +40,7 @@ export default class TeamsLinkApplicationCustomizer
 
       var siteHeader = document.querySelector('[data-automationid="SiteHeader"]');
 
+      var context = this;
       // Watch to see if elements change based on window size
       const observer = new MutationObserver(function(mutations_list) {
         mutations_list.forEach(function(mutation) {
@@ -47,35 +48,35 @@ export default class TeamsLinkApplicationCustomizer
 
             // Desktop size
             if(added_node.isSameNode(siteHeader.querySelector('[class^="actionsWrapper-"]'))){
+              if(!context.linkExists()) {
+                let actionLink = context.createLink(teamsUrl);
 
-              let actionLink = this.createLink(teamsUrl);
+                let spacer = document.createElement("span");
+                spacer.className = styles.spacer;
+                spacer.innerText = "|"
 
-              let spacer = document.createElement("span");
-              spacer.className = styles.spacer;
-              spacer.innerText = "|"
+                if(isMember){
+                  actionLink.innerText = "Conversations";
+                } else {
+                  actionLink.innerText = strings.become;
+                }
 
-              if(isMember){
-                actionLink.innerText = "Conversations";
-              } else {
-                actionLink.innerText = strings.become;
+                siteHeader.querySelector('[class^="actionsWrapper-"]').prepend(spacer);
+                siteHeader.querySelector('[class^="actionsWrapper-"]').prepend(actionLink);
               }
-
-              siteHeader.querySelector('[class^="actionsWrapper-"]').prepend(spacer);
-              siteHeader.querySelector('[class^="actionsWrapper-"]').prepend(actionLink);
-
             // Mobile size
             } else if(added_node.isSameNode(siteHeader.querySelector('[class^="sideActionsWrapper-"]'))) {
+              if(!context.linkExists()) {
+                let actionLink = context.createLink(teamsUrl);
 
-              let actionLink = this.createLink(teamsUrl);
+                if(isMember){
+                  actionLink.innerText = "Conversations";
+                } else {
+                  actionLink.innerText = strings.become;
+                }
 
-              if(isMember){
-                actionLink.innerText = "Conversations";
-              } else {
-                actionLink.innerText = strings.become;
+                siteHeader.querySelector('[class^="sideActionsWrapper-"]').prepend(actionLink);
               }
-
-              siteHeader.querySelector('[class^="sideActionsWrapper-"]').prepend(actionLink);
-
             }
           });
         });
