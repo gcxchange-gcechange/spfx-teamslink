@@ -4,23 +4,23 @@
   "https": true,
   "serveConfigurations": {
     "default": {
-      "pageUrl": "https://gcxgcedev.sharepoint.com/teams/EthanTest",
+      "pageUrl": "https://devgcx.sharepoint.com/teams/sheatestgroup",
       "customActions": {
         "028e8be1-e238-4ec7-8384-adfc3dae0fd1": {
           "location": "ClientSideExtension.ApplicationCustomizer",
           "properties": {
-            "testMessage": "Test message"
+            "hubSiteIds": "8580dcc6-b8f3-4fdf-8670-fb3840dd832d"
           }
         }
       }
     },
     "teamsLink": {
-      "pageUrl": "https://gcxgcedev.sharepoint.com/teams/EthanTest",
+      "pageUrl": "https://devgcx.sharepoint.com/teams/sheatestgroup",
       "customActions": {
         "028e8be1-e238-4ec7-8384-adfc3dae0fd1": {
           "location": "ClientSideExtension.ApplicationCustomizer",
           "properties": {
-            "testMessage": "Test message"
+            "hubSiteIds": "8580dcc6-b8f3-4fdf-8670-fb3840dd832d"
           }
         }
       }

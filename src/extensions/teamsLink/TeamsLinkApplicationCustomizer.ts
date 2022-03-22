@@ -5,8 +5,6 @@ import {
 
 import * as strings from 'TeamsLinkApplicationCustomizerStrings';
 
-const LOG_SOURCE: string = 'TeamsLinkApplicationCustomizer';
-
 import { graph } from "@pnp/graph";
 import "@pnp/graph/teams";
 import "@pnp/graph/users";
@@ -14,27 +12,33 @@ import "@pnp/graph/groups";
 
 import styles from './components/TeamsLink.module.scss';
 
-export interface ITeamsLinkApplicationCustomizerProperties {}
+export interface ITeamsLinkApplicationCustomizerProperties {
+  hubSiteIds: string
+}
 
 export default class TeamsLinkApplicationCustomizer
   extends BaseApplicationCustomizer<ITeamsLinkApplicationCustomizerProperties> {
 
+  teamslinkId: string = "spfx-teamslink";
+
   @override
   public async onInit(): Promise<void> {
+    console.log("SPFx - Teamslink");
 
     graph.setup({
       spfxContext: this.context
     });
 
     // Check if a community site
-    if(!this.context.pageContext.legacyPageContext.isHubSite && (this.context.pageContext.legacyPageContext.hubSiteId == "688cb2b9-e071-4b25-ad9c-2b0dca2b06ba" || this.context.pageContext.legacyPageContext.hubSiteId == "903ef314-6346-4d28-a135-07cd7a9f5c38")){
+    if(!this.context.pageContext.legacyPageContext.isHubSite && this.checkHubSiteIds()){
+
       let teamsUrl = await this.getTeamURL();
       let isMember = await this.isMember();
 
       // Add conversations
       this.render(teamsUrl, isMember);
 
-      var siteHeader = document.querySelector('[data-automationid="SiteHeader"]')
+      var siteHeader = document.querySelector('[data-automationid="SiteHeader"]');
 
       // Watch to see if elements change based on window size
       const observer = new MutationObserver(function(mutations_list) {
@@ -44,9 +48,7 @@ export default class TeamsLinkApplicationCustomizer
             // Desktop size
             if(added_node.isSameNode(siteHeader.querySelector('[class^="actionsWrapper-"]'))){
 
-              let actionLink = document.createElement("a");
-              actionLink.href = teamsUrl;
-              actionLink.className = styles.actionsLink;
+              let actionLink = this.createLink(teamsUrl);
 
               let spacer = document.createElement("span");
               spacer.className = styles.spacer;
@@ -64,9 +66,7 @@ export default class TeamsLinkApplicationCustomizer
             // Mobile size
             } else if(added_node.isSameNode(siteHeader.querySelector('[class^="sideActionsWrapper-"]'))) {
 
-              let actionLink = document.createElement("a");
-              actionLink.href = teamsUrl;
-              actionLink.className = styles.actionsLink;
+              let actionLink = this.createLink(teamsUrl);
 
               if(isMember){
                 actionLink.innerText = "Conversations";
@@ -91,11 +91,11 @@ export default class TeamsLinkApplicationCustomizer
     return Promise.resolve();
   }
 
-  public async render(teamsUrl, isMember) {
+  public render(teamsUrl, isMember) {
+    if(this.linkExists())
+      return;
 
-    let actionLink = document.createElement("a");
-    actionLink.href = teamsUrl;
-    actionLink.className = styles.actionsLink;
+    let actionLink = this.createLink(teamsUrl);
 
     let spacer = document.createElement("span");
     spacer.className = styles.spacer;
@@ -114,7 +114,6 @@ export default class TeamsLinkApplicationCustomizer
     } else {
       document.querySelector('[class^="sideActionsWrapper-"]').append(actionLink)
     }
-
   }
 
   public async getTeamURL() {
@@ -124,14 +123,14 @@ export default class TeamsLinkApplicationCustomizer
 
     await this.callTeamsAPI(groupid).then(res => {
       res.forEach((channel) => {
-        if(channel.displayName == "General"){
-          url = channel.webUrl;
+        if(channel.displayName == "General") {
+          url = "https://teams.microsoft.com/_#/conversations/General?threadId=" + channel.id;
         }
       });
 
       // If no General channel found, take first channel
       if(url == ""){
-        url = res[0].webUrl;
+        url = "https://teams.microsoft.com/_#/conversations/" + res[0].displayName + "?threadId=" + res[0].id;
       }
     });
 
@@ -155,8 +154,38 @@ export default class TeamsLinkApplicationCustomizer
 
     const res = await graph.teams.getById(groupid).channels();
 
-    let response = await res;
+    return res;
+  }
 
-    return response;
+  private createLink(teamsUrl): HTMLAnchorElement {
+    let actionLink = document.createElement("a");
+
+    actionLink.href = teamsUrl;
+    actionLink.className = styles.actionsLink;
+    actionLink.target = "_blank";
+    actionLink.id = this.teamslinkId;
+
+    return actionLink;
+  }
+
+  private linkExists(): boolean {
+    let link = document.getElementById(this.teamslinkId);
+    return link !== null;
+  }
+
+  // TODO: Rethink this
+  // Original hubSiteIds: "688cb2b9-e071-4b25-ad9c-2b0dca2b06ba" "903ef314-6346-4d28-a135-07cd7a9f5c38"
+  private checkHubSiteIds(): boolean {
+    console.log("hubSiteId: " + this.context.pageContext.legacyPageContext.hubSiteId);
+    return true;
+    let context = this;
+    let hubSiteIds = `${this.properties.hubSiteIds}`.replace(/\s/g, '').split(',');
+
+    for(let i = 0; i < hubSiteIds.length; i++) {
+      if(context.context.pageContext.legacyPageContext.hubSiteId == hubSiteIds[i])
+        return true;
+    }
+
+    return false;
   }
 }
