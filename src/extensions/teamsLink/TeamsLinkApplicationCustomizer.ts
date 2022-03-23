@@ -23,8 +23,6 @@ export default class TeamsLinkApplicationCustomizer
 
   @override
   public async onInit(): Promise<void> {
-    console.log("SPFx - Teamslink");
-
     graph.setup({
       spfxContext: this.context
     });
@@ -56,9 +54,11 @@ export default class TeamsLinkApplicationCustomizer
                 spacer.innerText = "|"
 
                 if(isMember){
-                  actionLink.innerText = "Conversations";
+                  actionLink.innerText = strings.conversations;
+                  actionLink.setAttribute("aria-label", strings.conversations);
                 } else {
                   actionLink.innerText = strings.become;
+                  actionLink.setAttribute("aria-label", strings.become);
                 }
 
                 siteHeader.querySelector('[class^="actionsWrapper-"]').prepend(spacer);
@@ -70,11 +70,14 @@ export default class TeamsLinkApplicationCustomizer
                 let actionLink = context.createLink(teamsUrl);
 
                 if(isMember){
-                  actionLink.innerText = "Conversations";
+                  actionLink.innerText = strings.conversations;
+                  actionLink.setAttribute("aria-label", strings.conversations);
                 } else {
                   actionLink.innerText = strings.become;
+                  actionLink.setAttribute("aria-label", strings.become);
                 }
 
+                context.applyMobileStyle();
                 siteHeader.querySelector('[class^="sideActionsWrapper-"]').prepend(actionLink);
               }
             }
@@ -103,9 +106,11 @@ export default class TeamsLinkApplicationCustomizer
     spacer.innerText = "|"
 
     if(isMember){
-      actionLink.innerText = "Conversations";
+      actionLink.innerText = strings.conversations;
+      actionLink.setAttribute("aria-label", strings.conversations);
     } else {
       actionLink.innerText = strings.become;
+      actionLink.setAttribute("aria-label", strings.become);
     }
 
     let actionsBar = document.querySelector('[class^="actionsWrapper-"]');
@@ -113,7 +118,8 @@ export default class TeamsLinkApplicationCustomizer
       actionsBar.prepend(spacer);
       actionsBar.prepend(actionLink);
     } else {
-      document.querySelector('[class^="sideActionsWrapper-"]').append(actionLink)
+      this.applyMobileStyle();
+      document.querySelector('[class^="sideActionsWrapper-"]').prepend(actionLink)
     }
   }
 
@@ -174,11 +180,8 @@ export default class TeamsLinkApplicationCustomizer
     return link !== null;
   }
 
-  // TODO: Rethink this
-  // Original hubSiteIds: "688cb2b9-e071-4b25-ad9c-2b0dca2b06ba" "903ef314-6346-4d28-a135-07cd7a9f5c38"
+  // Make sure the hub we're in is one of the approved hubs
   private checkHubSiteIds(): boolean {
-    console.log("hubSiteId: " + this.context.pageContext.legacyPageContext.hubSiteId);
-    return true;
     let context = this;
     let hubSiteIds = `${this.properties.hubSiteIds}`.replace(/\s/g, '').split(',');
 
@@ -188,5 +191,13 @@ export default class TeamsLinkApplicationCustomizer
     }
 
     return false;
+  }
+
+  private applyMobileStyle(): void {
+    var actionWrapper = document.querySelector('[data-automationid="SiteHeader"]').querySelector('[class^="sideActionsWrapper-"]') as HTMLElement;
+    actionWrapper.style.display = "inline";
+
+    var moreActions = actionWrapper.querySelector('[class^="moreActionsButton-"]') as HTMLElement;
+    moreActions.style.display = "inline";
   }
 }

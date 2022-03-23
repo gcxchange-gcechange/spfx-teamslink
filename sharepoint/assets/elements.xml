@@ -4,6 +4,6 @@
         Title="TeamsLink"
         Location="ClientSideExtension.ApplicationCustomizer"
         ClientSideComponentId="028e8be1-e238-4ec7-8384-adfc3dae0fd1"
-        ClientSideComponentProperties="{&quot;testMessage&quot;:&quot;Test message&quot;}">
+        ClientSideComponentProperties="{&quot;hubSiteIds&quot;:&quot;&quot;}">
     </CustomAction>
 </Elements>
