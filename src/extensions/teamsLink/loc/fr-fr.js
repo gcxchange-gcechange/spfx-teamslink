@@ -1,5 +1,6 @@
 define([], function() {
   return {
-    "become": "Devenez membre"
+    "become": "Devenez membre",
+    "conversations": "Conversations"
   }
 });

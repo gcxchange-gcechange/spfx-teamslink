@@ -5,8 +5,6 @@ import {
 
 import * as strings from 'TeamsLinkApplicationCustomizerStrings';
 
-const LOG_SOURCE: string = 'TeamsLinkApplicationCustomizer';
-
 import { graph } from "@pnp/graph";
 import "@pnp/graph/teams";
 import "@pnp/graph/users";
@@ -14,28 +12,33 @@ import "@pnp/graph/groups";
 
 import styles from './components/TeamsLink.module.scss';
 
-export interface ITeamsLinkApplicationCustomizerProperties {}
+export interface ITeamsLinkApplicationCustomizerProperties {
+  hubSiteIds: string
+}
 
 export default class TeamsLinkApplicationCustomizer
   extends BaseApplicationCustomizer<ITeamsLinkApplicationCustomizerProperties> {
 
+  teamslinkId: string = "spfx-teamslink";
+
   @override
   public async onInit(): Promise<void> {
-
     graph.setup({
       spfxContext: this.context
     });
 
     // Check if a community site
-    if(!this.context.pageContext.legacyPageContext.isHubSite && (this.context.pageContext.legacyPageContext.hubSiteId == "688cb2b9-e071-4b25-ad9c-2b0dca2b06ba" || this.context.pageContext.legacyPageContext.hubSiteId == "903ef314-6346-4d28-a135-07cd7a9f5c38")){
+    if(!this.context.pageContext.legacyPageContext.isHubSite && this.checkHubSiteIds()){
+
       let teamsUrl = await this.getTeamURL();
       let isMember = await this.isMember();
 
       // Add conversations
       this.render(teamsUrl, isMember);
 
-      var siteHeader = document.querySelector('[data-automationid="SiteHeader"]')
+      var siteHeader = document.querySelector('[data-automationid="SiteHeader"]');
 
+      var context = this;
       // Watch to see if elements change based on window size
       const observer = new MutationObserver(function(mutations_list) {
         mutations_list.forEach(function(mutation) {
@@ -43,39 +46,40 @@ export default class TeamsLinkApplicationCustomizer
 
             // Desktop size
             if(added_node.isSameNode(siteHeader.querySelector('[class^="actionsWrapper-"]'))){
+              if(!context.linkExists()) {
+                let actionLink = context.createLink(teamsUrl);
 
-              let actionLink = document.createElement("a");
-              actionLink.href = teamsUrl;
-              actionLink.className = styles.actionsLink;
+                let spacer = document.createElement("span");
+                spacer.className = styles.spacer;
+                spacer.innerText = "|"
 
-              let spacer = document.createElement("span");
-              spacer.className = styles.spacer;
-              spacer.innerText = "|"
+                if(isMember){
+                  actionLink.innerText = strings.conversations;
+                  actionLink.setAttribute("aria-label", strings.conversations);
+                } else {
+                  actionLink.innerText = strings.become;
+                  actionLink.setAttribute("aria-label", strings.become);
+                }
 
-              if(isMember){
-                actionLink.innerText = "Conversations";
-              } else {
-                actionLink.innerText = strings.become;
+                siteHeader.querySelector('[class^="actionsWrapper-"]').prepend(spacer);
+                siteHeader.querySelector('[class^="actionsWrapper-"]').prepend(actionLink);
               }
-
-              siteHeader.querySelector('[class^="actionsWrapper-"]').prepend(spacer);
-              siteHeader.querySelector('[class^="actionsWrapper-"]').prepend(actionLink);
-
             // Mobile size
             } else if(added_node.isSameNode(siteHeader.querySelector('[class^="sideActionsWrapper-"]'))) {
+              if(!context.linkExists()) {
+                let actionLink = context.createLink(teamsUrl);
 
-              let actionLink = document.createElement("a");
-              actionLink.href = teamsUrl;
-              actionLink.className = styles.actionsLink;
+                if(isMember){
+                  actionLink.innerText = strings.conversations;
+                  actionLink.setAttribute("aria-label", strings.conversations);
+                } else {
+                  actionLink.innerText = strings.become;
+                  actionLink.setAttribute("aria-label", strings.become);
+                }
 
-              if(isMember){
-                actionLink.innerText = "Conversations";
-              } else {
-                actionLink.innerText = strings.become;
+                context.applyMobileStyle();
+                siteHeader.querySelector('[class^="sideActionsWrapper-"]').prepend(actionLink);
               }
-
-              siteHeader.querySelector('[class^="sideActionsWrapper-"]').prepend(actionLink);
-
             }
           });
         });
@@ -91,20 +95,22 @@ export default class TeamsLinkApplicationCustomizer
     return Promise.resolve();
   }
 
-  public async render(teamsUrl, isMember) {
+  public render(teamsUrl, isMember) {
+    if(this.linkExists())
+      return;
 
-    let actionLink = document.createElement("a");
-    actionLink.href = teamsUrl;
-    actionLink.className = styles.actionsLink;
+    let actionLink = this.createLink(teamsUrl);
 
     let spacer = document.createElement("span");
     spacer.className = styles.spacer;
     spacer.innerText = "|"
 
     if(isMember){
-      actionLink.innerText = "Conversations";
+      actionLink.innerText = strings.conversations;
+      actionLink.setAttribute("aria-label", strings.conversations);
     } else {
       actionLink.innerText = strings.become;
+      actionLink.setAttribute("aria-label", strings.become);
     }
 
     let actionsBar = document.querySelector('[class^="actionsWrapper-"]');
@@ -112,9 +118,9 @@ export default class TeamsLinkApplicationCustomizer
       actionsBar.prepend(spacer);
       actionsBar.prepend(actionLink);
     } else {
-      document.querySelector('[class^="sideActionsWrapper-"]').append(actionLink)
+      this.applyMobileStyle();
+      document.querySelector('[class^="sideActionsWrapper-"]').prepend(actionLink)
     }
-
   }
 
   public async getTeamURL() {
@@ -124,14 +130,14 @@ export default class TeamsLinkApplicationCustomizer
 
     await this.callTeamsAPI(groupid).then(res => {
       res.forEach((channel) => {
-        if(channel.displayName == "General"){
-          url = channel.webUrl;
+        if(channel.displayName == "General") {
+          url = "https://teams.microsoft.com/_#/conversations/General?threadId=" + channel.id;
         }
       });
 
       // If no General channel found, take first channel
       if(url == ""){
-        url = res[0].webUrl;
+        url = "https://teams.microsoft.com/_#/conversations/" + res[0].displayName + "?threadId=" + res[0].id;
       }
     });
 
@@ -155,8 +161,43 @@ export default class TeamsLinkApplicationCustomizer
 
     const res = await graph.teams.getById(groupid).channels();
 
-    let response = await res;
+    return res;
+  }
 
-    return response;
+  private createLink(teamsUrl): HTMLAnchorElement {
+    let actionLink = document.createElement("a");
+
+    actionLink.href = teamsUrl;
+    actionLink.className = styles.actionsLink;
+    actionLink.target = "_blank";
+    actionLink.id = this.teamslinkId;
+
+    return actionLink;
+  }
+
+  private linkExists(): boolean {
+    let link = document.getElementById(this.teamslinkId);
+    return link !== null;
+  }
+
+  // Make sure the hub we're in is one of the approved hubs
+  private checkHubSiteIds(): boolean {
+    let context = this;
+    let hubSiteIds = `${this.properties.hubSiteIds}`.replace(/\s/g, '').split(',');
+
+    for(let i = 0; i < hubSiteIds.length; i++) {
+      if(context.context.pageContext.legacyPageContext.hubSiteId == hubSiteIds[i])
+        return true;
+    }
+
+    return false;
+  }
+
+  private applyMobileStyle(): void {
+    var actionWrapper = document.querySelector('[data-automationid="SiteHeader"]').querySelector('[class^="sideActionsWrapper-"]') as HTMLElement;
+    actionWrapper.style.display = "inline";
+
+    var moreActions = actionWrapper.querySelector('[class^="moreActionsButton-"]') as HTMLElement;
+    moreActions.style.display = "inline";
   }
 }
