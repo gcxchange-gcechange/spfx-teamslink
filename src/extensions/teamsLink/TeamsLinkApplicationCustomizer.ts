@@ -52,10 +52,7 @@ export default class TeamsLinkApplicationCustomizer
             if(added_node.isSameNode(siteHeader.querySelector('[class^="actionsWrapper-"]'))){
               if(!context.linkExists()) {
                 let actionLink = context.createLink(teamsUrl);
-
-                let spacer = document.createElement("span");
-                spacer.className = styles.spacer;
-                spacer.innerText = "|"
+                actionLink.className = styles.actionLinkBox;
 
                 if(isMember){
                   actionLink.innerText = strings.conversations;
@@ -65,7 +62,6 @@ export default class TeamsLinkApplicationCustomizer
                   actionLink.setAttribute("aria-label", strings.become);
                 }
 
-                siteHeader.querySelector('[class^="actionsWrapper-"]').prepend(spacer);
                 siteHeader.querySelector('[class^="actionsWrapper-"]').prepend(actionLink);
               }
             // Mobile size
@@ -104,10 +100,7 @@ export default class TeamsLinkApplicationCustomizer
       return;
 
     let actionLink = this.createLink(teamsUrl);
-
-    let spacer = document.createElement("span");
-    spacer.className = styles.spacer;
-    spacer.innerText = "|"
+    actionLink.className = styles.actionLinkBox;
 
     if(isMember){
       actionLink.innerText = strings.conversations;
@@ -119,7 +112,7 @@ export default class TeamsLinkApplicationCustomizer
 
     let actionsBar = document.querySelector('[class^="actionsWrapper-"]');
     if(actionsBar){
-      actionsBar.prepend(spacer);
+      //actionsBar.prepend(spacer);
       actionsBar.prepend(actionLink);
     } else {
       this.applyMobileStyle();
@@ -128,9 +121,11 @@ export default class TeamsLinkApplicationCustomizer
   }
 
   public async getTeamURL() {
+    var TeamsListUrl = "https://devgcx.sharepoint.com/sites/app-reference/_api/lists/GetByTitle('TeamsLink')/items";
+    var noTeamsLink = "NOTEAMSLINK";
     var groupid = this.context.pageContext.site.group.id._guid;
     // Get teams link sharepoint list
-    var url = await this.context.spHttpClient.get(this.properties.TeamsListUrl,
+    var url = await this.context.spHttpClient.get(TeamsListUrl,
     SPHttpClient.configurations.v1,
     {
       headers: {
@@ -147,15 +142,14 @@ export default class TeamsLinkApplicationCustomizer
     }).then(function(jsonObject){
       var TeamsLinksList = jsonObject.value;
       //Get all item and check if matching groupid
+      var teamslink = noTeamsLink
       for (const item of TeamsLinksList) {
-        var teamslink = ""
         if(item.TeamsID == groupid){
           teamslink = item.Teamslink
-        } else{
-          teamslink = this.properties.noTeamsLink
-        }
-        return teamslink
+          break;
+        } 
       }
+      return teamslink
     }).catch(function (error) {
       console.log(`Error:${error}`);
     });
@@ -195,7 +189,6 @@ export default class TeamsLinkApplicationCustomizer
   private checkHubSiteIds(): boolean {
     let context = this;
     let hubSiteIds = `${this.properties.hubSiteIds}`.replace(/\s/g, '').split(',');
-
     for(let i = 0; i < hubSiteIds.length; i++) {
       if(context.context.pageContext.legacyPageContext.hubSiteId == hubSiteIds[i])
         return true;
