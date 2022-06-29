@@ -1,6 +1,6 @@
 define([], function() {
   return {
-    "become": "Devenez membre",
+    "become": "Joignez le groupe par MS Teams",
     "conversations": "Conversations"
   }
 });

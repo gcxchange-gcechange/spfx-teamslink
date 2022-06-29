@@ -4,23 +4,27 @@
   "https": true,
   "serveConfigurations": {
     "default": {
-      "pageUrl": "https://devgcx.sharepoint.com/teams/sheatestgroup",
+      "pageUrl": "https://devgcx.sharepoint.com/teams/stephtest",
       "customActions": {
         "028e8be1-e238-4ec7-8384-adfc3dae0fd1": {
           "location": "ClientSideExtension.ApplicationCustomizer",
           "properties": {
-            "hubSiteIds": ""
+            "hubSiteIds": "e68ee8eb-fb73-4ace-b83a-954d18cead4a",
+            "TeamsListUrl": "https://devgcx.sharepoint.com/sites/app-reference/_api/lists/GetByTitle('TeamsLink')/items",
+            "noTeamsLink": "https://teams.microsoft.com/_?tenantId=28d8f6f0-3824-448a-9247-b88592acc8b7#/conversations"
           }
         }
       }
     },
     "teamsLink": {
-      "pageUrl": "https://devgcx.sharepoint.com/teams/sheatestgroup",
+      "pageUrl": "https://devgcx.sharepoint.com/teams/stephtest",
       "customActions": {
         "028e8be1-e238-4ec7-8384-adfc3dae0fd1": {
           "location": "ClientSideExtension.ApplicationCustomizer",
           "properties": {
-            "hubSiteIds": ""
+            "hubSiteIds": "e68ee8eb-fb73-4ace-b83a-954d18cead4a",
+            "TeamsListUrl": "https://devgcx.sharepoint.com/sites/app-reference/_api/lists/GetByTitle('TeamsLink')/items",
+            "noTeamsLink": "https://teams.microsoft.com/_?tenantId=28d8f6f0-3824-448a-9247-b88592acc8b7#/conversations"
           }
         }
       }

@@ -12,25 +12,29 @@ import "@pnp/graph/groups";
 
 import styles from './components/TeamsLink.module.scss';
 
+import { SPHttpClient } from '@microsoft/sp-http';
+
 export interface ITeamsLinkApplicationCustomizerProperties {
-  hubSiteIds: string
+  TeamsListUrl: string;
+  hubSiteIds: string;
+  noTeamsLink: string;
 }
 
 export default class TeamsLinkApplicationCustomizer
   extends BaseApplicationCustomizer<ITeamsLinkApplicationCustomizerProperties> {
 
-  teamslinkId: string = "spfx-teamslink";
+  teamslinkId: string = "";
 
   @override
   public async onInit(): Promise<void> {
+
     graph.setup({
       spfxContext: this.context
     });
-
     // Check if a community site
     if(!this.context.pageContext.legacyPageContext.isHubSite && this.checkHubSiteIds()){
 
-      let teamsUrl = await this.getTeamURL();
+      var teamsUrl =  await this.getTeamURL();
       let isMember = await this.isMember();
 
       // Add conversations
@@ -48,10 +52,7 @@ export default class TeamsLinkApplicationCustomizer
             if(added_node.isSameNode(siteHeader.querySelector('[class^="actionsWrapper-"]'))){
               if(!context.linkExists()) {
                 let actionLink = context.createLink(teamsUrl);
-
-                let spacer = document.createElement("span");
-                spacer.className = styles.spacer;
-                spacer.innerText = "|"
+                actionLink.className = styles.actionLinkBox;
 
                 if(isMember){
                   actionLink.innerText = strings.conversations;
@@ -61,7 +62,6 @@ export default class TeamsLinkApplicationCustomizer
                   actionLink.setAttribute("aria-label", strings.become);
                 }
 
-                siteHeader.querySelector('[class^="actionsWrapper-"]').prepend(spacer);
                 siteHeader.querySelector('[class^="actionsWrapper-"]').prepend(actionLink);
               }
             // Mobile size
@@ -100,10 +100,7 @@ export default class TeamsLinkApplicationCustomizer
       return;
 
     let actionLink = this.createLink(teamsUrl);
-
-    let spacer = document.createElement("span");
-    spacer.className = styles.spacer;
-    spacer.innerText = "|"
+    actionLink.className = styles.actionLinkBox;
 
     if(isMember){
       actionLink.innerText = strings.conversations;
@@ -115,7 +112,7 @@ export default class TeamsLinkApplicationCustomizer
 
     let actionsBar = document.querySelector('[class^="actionsWrapper-"]');
     if(actionsBar){
-      actionsBar.prepend(spacer);
+      //actionsBar.prepend(spacer);
       actionsBar.prepend(actionLink);
     } else {
       this.applyMobileStyle();
@@ -124,24 +121,39 @@ export default class TeamsLinkApplicationCustomizer
   }
 
   public async getTeamURL() {
-
+    var TeamsListUrl = "https://devgcx.sharepoint.com/sites/app-reference/_api/lists/GetByTitle('TeamsLink')/items";
+    var noTeamsLink = "NOTEAMSLINK";
     var groupid = this.context.pageContext.site.group.id._guid;
-    var url = "";
-
-    await this.callTeamsAPI(groupid).then(res => {
-      res.forEach((channel) => {
-        if(channel.displayName == "General") {
-          url = "https://teams.microsoft.com/_#/conversations/General?threadId=" + channel.id;
-        }
-      });
-
-      // If no General channel found, take first channel
-      if(url == ""){
-        url = "https://teams.microsoft.com/_#/conversations/" + res[0].displayName + "?threadId=" + res[0].id;
+    // Get teams link sharepoint list
+    var url = await this.context.spHttpClient.get(TeamsListUrl,
+    SPHttpClient.configurations.v1,
+    {
+      headers: {
+        "Accept": "application/json;odata=nometadata",
+        "odata-version": "3.0"
       }
+    })
+    .then(function (response) {
+      if (!response.ok){
+          throw Error(`Error, status code ${response.status}`);
+      }else{
+          return response.json();
+      }
+    }).then(function(jsonObject){
+      var TeamsLinksList = jsonObject.value;
+      //Get all item and check if matching groupid
+      var teamslink = noTeamsLink
+      for (const item of TeamsLinksList) {
+        if(item.TeamsID == groupid){
+          teamslink = item.Teamslink
+          break;
+        } 
+      }
+      return teamslink
+    }).catch(function (error) {
+      console.log(`Error:${error}`);
     });
-
-    return url;
+    return Promise.resolve(url);
   }
 
   public async isMember(){
@@ -155,13 +167,6 @@ export default class TeamsLinkApplicationCustomizer
     });
 
     return isMember;
-  }
-
-  private async callTeamsAPI(groupid){
-
-    const res = await graph.teams.getById(groupid).channels();
-
-    return res;
   }
 
   private createLink(teamsUrl): HTMLAnchorElement {
@@ -184,7 +189,6 @@ export default class TeamsLinkApplicationCustomizer
   private checkHubSiteIds(): boolean {
     let context = this;
     let hubSiteIds = `${this.properties.hubSiteIds}`.replace(/\s/g, '').split(',');
-
     for(let i = 0; i < hubSiteIds.length; i++) {
       if(context.context.pageContext.legacyPageContext.hubSiteId == hubSiteIds[i])
         return true;
