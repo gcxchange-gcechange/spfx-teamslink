@@ -28,6 +28,14 @@ export default class TeamsLinkApplicationCustomizer
   @override
   public async onInit(): Promise<void> {
 
+    await super.onInit();
+      
+    this.context.application.navigatedEvent.add(this, this.initialize);
+
+    return Promise.resolve();
+  }
+
+  public async initialize() {
     graph.setup({
       spfxContext: this.context
     });
@@ -91,8 +99,6 @@ export default class TeamsLinkApplicationCustomizer
 
       observer.observe(siteHeader, config);
     }
-
-    return Promise.resolve();
   }
 
   public render(teamsUrl, isMember) {
