@@ -127,7 +127,7 @@ export default class TeamsLinkApplicationCustomizer
   }
 
   public async getTeamURL() {
-    var TeamsListUrl = "https://devgcx.sharepoint.com/sites/app-reference/_api/lists/GetByTitle('TeamsLink')/items";
+    var TeamsListUrl = "https://devgcx.sharepoint.com/sites/app-reference/_api/lists/GetByTitle('TeamsLink')/items?$top=4000";
     var noTeamsLink = "NOTEAMSLINK";
     var groupid = this.context.pageContext.site.group.id._guid;
     // Get teams link sharepoint list
