@@ -24,14 +24,17 @@ export default class TeamsLinkApplicationCustomizer
   extends BaseApplicationCustomizer<ITeamsLinkApplicationCustomizerProperties> {
 
   teamslinkId: string = "gcx-teams-link-id";
+  static hasInit: boolean = false;
 
   @override
   public async onInit(): Promise<void> {
-
+    
     await super.onInit();
       
-    if (!this.linkExists())
+    if (TeamsLinkApplicationCustomizer.hasInit !== true) {
+      TeamsLinkApplicationCustomizer.hasInit = true;
       this.context.application.navigatedEvent.add(this, this.initialize);
+    }
 
     return Promise.resolve();
   }
