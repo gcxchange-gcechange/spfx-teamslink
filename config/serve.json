@@ -4,7 +4,7 @@
   "https": true,
   "serveConfigurations": {
     "default": {
-      "pageUrl": "https://devgcx.sharepoint.com/teams/stephtest",
+      "pageUrl": "https://devgcx.sharepoint.com/teams/SheaSubHub1",
       "customActions": {
         "028e8be1-e238-4ec7-8384-adfc3dae0fd1": {
           "location": "ClientSideExtension.ApplicationCustomizer",
@@ -17,7 +17,7 @@
       }
     },
     "teamsLink": {
-      "pageUrl": "https://devgcx.sharepoint.com/teams/stephtest",
+      "pageUrl": "https://devgcx.sharepoint.com/teams/SheaSubHub1",
       "customActions": {
         "028e8be1-e238-4ec7-8384-adfc3dae0fd1": {
           "location": "ClientSideExtension.ApplicationCustomizer",
