@@ -30,7 +30,8 @@ export default class TeamsLinkApplicationCustomizer
 
     await super.onInit();
       
-    this.context.application.navigatedEvent.add(this, this.initialize);
+    if (!this.linkExists())
+      this.context.application.navigatedEvent.add(this, this.initialize);
 
     return Promise.resolve();
   }
