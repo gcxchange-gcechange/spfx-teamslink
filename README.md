@@ -6,6 +6,8 @@ Use graph API to add a Conversations/Become a member link to community pages on 
 
 **_You need to update the hubSiteIds property with comma seperated GUIDs for your valid hubs. You can do so in the serve.json file or from the tenant wide exstensions list when deployed._**
 
+**_You need to update the teamslinkId in TeamsLinkApplicationCustomizer.ts to avoid duplication_**
+
 ## Deployment
 
 spfx-teamslink is intended to be deployed tenant wide.
