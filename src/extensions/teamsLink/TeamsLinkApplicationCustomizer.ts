@@ -23,7 +23,7 @@ export interface ITeamsLinkApplicationCustomizerProperties {
 export default class TeamsLinkApplicationCustomizer
   extends BaseApplicationCustomizer<ITeamsLinkApplicationCustomizerProperties> {
 
-  teamslinkId: string = "";
+  teamslinkId: string = "f3f79be5-ebc1-4ce5-8435-96db86a4eb20";
 
   @override
   public async onInit(): Promise<void> {
