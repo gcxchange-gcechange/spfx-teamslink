@@ -124,6 +124,7 @@ export default class TeamsLinkApplicationCustomizer
       this.applyMobileStyle();
       document.querySelector('[class^="sideActionsWrapper-"]').prepend(actionLink)
     }
+    document.querySelector<HTMLElement>('[class^="ms-Button ms-Button--icon teamsChannelLink-"]').style.display = "none";
   }
 
   public async getTeamURL() {
