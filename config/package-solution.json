@@ -14,6 +14,21 @@
       "termsOfUseUrl": "",
       "mpnId": ""
     },
+    "metadata": {
+      "solution": {
+        "metadata": {
+          "shortDescription": {
+            "default": "spfx-teamslink description"
+          },
+          "longDescription": {
+            "default": "spfx-teamslink description"
+          },
+          "screenshotPaths": [],
+          "videoUrl": "",
+          "categories": []
+        }
+      }
+    },
     "features": [
       {
         "title": "Application Extension - Deployment of custom action.",
@@ -21,10 +36,7 @@
         "id": "bd6dba7d-4eab-4476-85dc-8fb319688e2c",
         "version": "1.0.0.0",
         "assets": {
-          "elementManifests": [
-            "elements.xml",
-            "ClientSideInstance.xml"
-          ]
+          "elementManifests": ["elements.xml", "ClientSideInstance.xml"]
         }
       }
     ],

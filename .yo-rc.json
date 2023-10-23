@@ -1,11 +1,20 @@
 {
   "@microsoft/generator-sharepoint": {
+    "plusBeta": false,
     "isCreatingSolution": true,
-    "environment": "spo",
-    "version": "1.11.0",
+    "nodeVersion": "16.15.1",
+    "sdksVersions": {
+      "@microsoft/microsoft-graph-client": "3.0.2",
+      "@microsoft/teams-js": "2.9.1"
+    },
+    "version": "1.17.4",
     "libraryName": "spfx-teamslink",
     "libraryId": "5f81c107-6362-4582-901d-53a0278eb9f7",
+    "environment": "spo",
     "packageManager": "npm",
+    "solutionName": "spfx-teamslink",
+    "solutionShortDescription": "spfx-teamslink description",
+    "skipFeatureDeployment": true,
     "isDomainIsolated": false,
     "componentType": "extension",
     "extensionType": "ApplicationCustomizer"
