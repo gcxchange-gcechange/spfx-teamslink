@@ -35,8 +35,9 @@ export default class TeamsLinkApplicationCustomizer
     return Promise.resolve();
   }
 
-  public async initialize() {
+  public async initialize():Promise<string|void> {
     graph.setup({
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       spfxContext: this.context as any
     });
     // Check if a community site
@@ -102,7 +103,8 @@ export default class TeamsLinkApplicationCustomizer
     }
   }
 
-  public render(teamsUrl, isMember) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public render(teamsUrl:any, isMember:boolean):any {
     if(this.linkExists())
       return;
 
@@ -128,7 +130,7 @@ export default class TeamsLinkApplicationCustomizer
     document.querySelector<HTMLElement>('[class^="ms-Button ms-Button--icon teamsChannelLink-"]').style.display = "none";
   }
 
-  public async getTeamURL() {
+  public async getTeamURL():Promise<string|void> {
     const TeamsListUrl = "https://devgcx.sharepoint.com/sites/app-reference/_api/lists/GetByTitle('TeamsLink')/items?$top=4000";
     const noTeamsLink = "NOTEAMSLINK";
     const groupid = this.context.pageContext.site.group.id._guid;
@@ -152,7 +154,7 @@ export default class TeamsLinkApplicationCustomizer
       //Get all item and check if matching groupid
       let teamslink = noTeamsLink
       for (const item of TeamsLinksList) {
-        if(item.TeamsID == groupid){
+        if(item.TeamsID === groupid){
           teamslink = item.Teamslink
           break;
         } 
@@ -164,12 +166,12 @@ export default class TeamsLinkApplicationCustomizer
     return Promise.resolve(url);
   }
 
-  public async isMember(){
+  public async isMember():Promise<boolean>{
     const groupid = this.context.pageContext.site.group.id._guid;
     let isMember = false;
 
     await graph.me.checkMemberGroups([groupid]).then(res => {
-      if(res[0] == groupid){
+      if(res[0] === groupid){
         isMember = true;
       }
     });
@@ -195,10 +197,11 @@ export default class TeamsLinkApplicationCustomizer
 
   // Make sure the hub we're in is one of the approved hubs
   private checkHubSiteIds(): boolean {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const context = this;
     const hubSiteIds = `${this.properties.hubSiteIds}`.replace(/\s/g, '').split(',');
     for(let i = 0; i < hubSiteIds.length; i++) {
-      if(context.context.pageContext.legacyPageContext.hubSiteId == hubSiteIds[i])
+      if(context.context.pageContext.legacyPageContext.hubSiteId === hubSiteIds[i])
         return true;
     }
 
