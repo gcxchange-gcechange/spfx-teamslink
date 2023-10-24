@@ -42,15 +42,16 @@ export default class TeamsLinkApplicationCustomizer
     // Check if a community site
     if(!this.context.pageContext.legacyPageContext.isHubSite && this.checkHubSiteIds()){
 
-      var teamsUrl =  await this.getTeamURL();
+      const teamsUrl =  await this.getTeamURL();
       let isMember = await this.isMember();
 
       // Add conversations
       this.render(teamsUrl, isMember);
 
-      var siteHeader = document.querySelector('[data-automationid="SiteHeader"]');
+      let siteHeader = document.querySelector('[data-automationid="SiteHeader"]');
 
-      var context = this;
+      // eslint-disable-next-line @typescript-eslint/no-this-alias
+      const context = this;
       // Watch to see if elements change based on window size
       const observer = new MutationObserver(function(mutations_list) {
         mutations_list.forEach(function(mutation) {
@@ -128,11 +129,11 @@ export default class TeamsLinkApplicationCustomizer
   }
 
   public async getTeamURL() {
-    var TeamsListUrl = "https://devgcx.sharepoint.com/sites/app-reference/_api/lists/GetByTitle('TeamsLink')/items?$top=4000";
-    var noTeamsLink = "NOTEAMSLINK";
-    var groupid = this.context.pageContext.site.group.id._guid;
+    let TeamsListUrl = "https://devgcx.sharepoint.com/sites/app-reference/_api/lists/GetByTitle('TeamsLink')/items?$top=4000";
+    let noTeamsLink = "NOTEAMSLINK";
+    let groupid = this.context.pageContext.site.group.id._guid;
     // Get teams link sharepoint list
-    var url = await this.context.spHttpClient.get(TeamsListUrl,
+    let url = await this.context.spHttpClient.get(TeamsListUrl,
     SPHttpClient.configurations.v1,
     {
       headers: {
@@ -147,9 +148,9 @@ export default class TeamsLinkApplicationCustomizer
           return response.json();
       }
     }).then(function(jsonObject){
-      var TeamsLinksList = jsonObject.value;
+      let TeamsLinksList = jsonObject.value;
       //Get all item and check if matching groupid
-      var teamslink = noTeamsLink
+      let teamslink = noTeamsLink
       for (const item of TeamsLinksList) {
         if(item.TeamsID == groupid){
           teamslink = item.Teamslink
