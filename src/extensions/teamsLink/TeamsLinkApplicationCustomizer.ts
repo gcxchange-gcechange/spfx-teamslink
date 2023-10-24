@@ -37,18 +37,18 @@ export default class TeamsLinkApplicationCustomizer
 
   public async initialize() {
     graph.setup({
-      spfxContext: this.context
+      spfxContext: this.context as any
     });
     // Check if a community site
     if(!this.context.pageContext.legacyPageContext.isHubSite && this.checkHubSiteIds()){
 
       const teamsUrl =  await this.getTeamURL();
-      let isMember = await this.isMember();
+      const isMember = await this.isMember();
 
       // Add conversations
       this.render(teamsUrl, isMember);
 
-      let siteHeader = document.querySelector('[data-automationid="SiteHeader"]');
+      const siteHeader = document.querySelector('[data-automationid="SiteHeader"]');
 
       // eslint-disable-next-line @typescript-eslint/no-this-alias
       const context = this;
@@ -60,7 +60,7 @@ export default class TeamsLinkApplicationCustomizer
             // Desktop size
             if(added_node.isSameNode(siteHeader.querySelector('[class^="actionsWrapper-"]'))){
               if(!context.linkExists()) {
-                let actionLink = context.createLink(teamsUrl);
+                const actionLink = context.createLink(teamsUrl);
                 actionLink.className = styles.actionLinkBox;
 
                 if(isMember){
@@ -76,7 +76,7 @@ export default class TeamsLinkApplicationCustomizer
             // Mobile size
             } else if(added_node.isSameNode(siteHeader.querySelector('[class^="sideActionsWrapper-"]'))) {
               if(!context.linkExists()) {
-                let actionLink = context.createLink(teamsUrl);
+                const actionLink = context.createLink(teamsUrl);
 
                 if(isMember){
                   actionLink.innerText = strings.conversations;
@@ -106,7 +106,7 @@ export default class TeamsLinkApplicationCustomizer
     if(this.linkExists())
       return;
 
-    let actionLink = this.createLink(teamsUrl);
+    const actionLink = this.createLink(teamsUrl);
     actionLink.className = styles.actionLinkBox;
 
     if(isMember){
@@ -117,7 +117,7 @@ export default class TeamsLinkApplicationCustomizer
       actionLink.setAttribute("aria-label", strings.become);
     }
 
-    let actionsBar = document.querySelector('[class^="actionsWrapper-"]');
+    const actionsBar = document.querySelector('[class^="actionsWrapper-"]');
     if(actionsBar){
       //actionsBar.prepend(spacer);
       actionsBar.prepend(actionLink);
@@ -129,11 +129,11 @@ export default class TeamsLinkApplicationCustomizer
   }
 
   public async getTeamURL() {
-    let TeamsListUrl = "https://devgcx.sharepoint.com/sites/app-reference/_api/lists/GetByTitle('TeamsLink')/items?$top=4000";
-    let noTeamsLink = "NOTEAMSLINK";
-    let groupid = this.context.pageContext.site.group.id._guid;
+    const TeamsListUrl = "https://devgcx.sharepoint.com/sites/app-reference/_api/lists/GetByTitle('TeamsLink')/items?$top=4000";
+    const noTeamsLink = "NOTEAMSLINK";
+    const groupid = this.context.pageContext.site.group.id._guid;
     // Get teams link sharepoint list
-    let url = await this.context.spHttpClient.get(TeamsListUrl,
+    const url = await this.context.spHttpClient.get(TeamsListUrl,
     SPHttpClient.configurations.v1,
     {
       headers: {
@@ -148,7 +148,7 @@ export default class TeamsLinkApplicationCustomizer
           return response.json();
       }
     }).then(function(jsonObject){
-      let TeamsLinksList = jsonObject.value;
+      const TeamsLinksList = jsonObject.value;
       //Get all item and check if matching groupid
       let teamslink = noTeamsLink
       for (const item of TeamsLinksList) {
@@ -165,7 +165,7 @@ export default class TeamsLinkApplicationCustomizer
   }
 
   public async isMember(){
-    var groupid = this.context.pageContext.site.group.id._guid;
+    const groupid = this.context.pageContext.site.group.id._guid;
     let isMember = false;
 
     await graph.me.checkMemberGroups([groupid]).then(res => {
@@ -178,7 +178,7 @@ export default class TeamsLinkApplicationCustomizer
   }
 
   private createLink(teamsUrl): HTMLAnchorElement {
-    let actionLink = document.createElement("a");
+    const actionLink = document.createElement("a");
 
     actionLink.href = teamsUrl;
     actionLink.className = styles.actionsLink;
@@ -189,14 +189,14 @@ export default class TeamsLinkApplicationCustomizer
   }
 
   private linkExists(): boolean {
-    let link = document.getElementById(this.teamslinkId);
+    const link = document.getElementById(this.teamslinkId);
     return link !== null;
   }
 
   // Make sure the hub we're in is one of the approved hubs
   private checkHubSiteIds(): boolean {
-    let context = this;
-    let hubSiteIds = `${this.properties.hubSiteIds}`.replace(/\s/g, '').split(',');
+    const context = this;
+    const hubSiteIds = `${this.properties.hubSiteIds}`.replace(/\s/g, '').split(',');
     for(let i = 0; i < hubSiteIds.length; i++) {
       if(context.context.pageContext.legacyPageContext.hubSiteId == hubSiteIds[i])
         return true;
@@ -206,10 +206,10 @@ export default class TeamsLinkApplicationCustomizer
   }
 
   private applyMobileStyle(): void {
-    var actionWrapper = document.querySelector('[data-automationid="SiteHeader"]').querySelector('[class^="sideActionsWrapper-"]') as HTMLElement;
+    const actionWrapper = document.querySelector('[data-automationid="SiteHeader"]').querySelector('[class^="sideActionsWrapper-"]') as HTMLElement;
     actionWrapper.style.display = "inline";
 
-    var moreActions = actionWrapper.querySelector('[class^="moreActionsButton-"]') as HTMLElement;
+    const moreActions = actionWrapper.querySelector('[class^="moreActionsButton-"]') as HTMLElement;
     moreActions.style.display = "inline";
   }
 }
