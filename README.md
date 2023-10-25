@@ -1,27 +1,25 @@
-# spfx-teamslink
+# Name of the application
 
 ## Summary
 
-Use graph API to add a Conversations/Become a member link to community pages on gcxchange based on user membership to group.
+Short description of what the webpart do. Give the basic information and feature of the app. 
 
-**_You need to update the hubSiteIds property with comma seperated GUIDs for your valid hubs. You can do so in the serve.json file or from the tenant wide exstensions list when deployed._**
+_Adding a visualisation is possible. Need to keep in mind that it should only reflect what is provide in the short description. Plus, an short description of the image or animation need to be provide in the alt._
 
-**_You need to update the teamslinkId in TeamsLinkApplicationCustomizer.ts to avoid duplication_**
+## Prerequisites
 
-## Deployment
+This web part connects to [this function app](https://github.com/gcxchange-gcechange/appsvc-fnc-dev-userstats).
 
-spfx-teamslink is intended to be deployed tenant wide.
+## API permission
+List of api permission that need to be approve by a sharepoint admin.
 
-## Required API access
+## Version 
 
-These Graph permissions are required for spfx-teamslink to run properly
-- User.ReadBasic.All
-- Team.ReadBasic.All
-- Channel.ReadBasic.All
+Used SharePoint Framework Webpart or Sharepoint Framework Extension 
 
-## Used SharePoint Framework Version
+![SPFx 1.11](https://img.shields.io/badge/SPFx-1.11-green.svg)
 
-![version](https://img.shields.io/badge/version-1.11-green.svg)
+![Node.js v10](https://img.shields.io/badge/Node.js-10.22.0-green.svg)
 
 ## Applies to
 
@@ -30,16 +28,30 @@ These Graph permissions are required for spfx-teamslink to run properly
 
 > Get your own free development tenant by subscribing to [Microsoft 365 developer program](http://aka.ms/o365devprogram)
 
-## Disclaimer
+## Version history
 
-**THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.**
-
----
+Version|Date|Comments
+-------|----|--------
+1.0|Dec 9, 2021|Initial release
+1.1|March 25, 2022|Next release
 
 ## Minimal Path to Awesome
 
 - Clone this repository
 - Ensure that you are at the solution folder
-- in the command-line run:
+- In the command-line run:
   - **npm install**
   - **gulp serve**
+- You will need to add your client id and azure function to the `clientId` and `url` classs members at the top of the filename.tsx file.
+- To debug in the front end:
+  - go to the `serve.json` file and update `initialPage` to `https://domain-name.sharepoint.com/_layouts/15/workbench.aspx`
+  - Run the command **gulp serve**
+- To deploy: in the command-line run
+  - **gulp bundle --ship**
+  - **gulp package-solution --ship**
+- Add the webpart to your tenant app store
+- Approve the web API permissions
+
+## Disclaimer
+
+**THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.**
