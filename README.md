@@ -11,18 +11,17 @@ Use graph API to add a Conversations/Become a member link to community pages on 
 
 ## Prerequisites
 
-This web part connects to [this function app](https://github.com/gcxchange-gcechange/appsvc-fnc-dev-userstats).
+spfx-teamslink is intended to be deployed tenant wide.
 
 ## API permission
-List of api permission that need to be approve by a sharepoint admin.
+- Microsoft Graph, User.ReadBasic.All
+- Microsoft Graph, Team.ReadBasic.All
+- Microsoft Graph, Channel.ReadBasic.All
 
 ## Version 
 
-Used SharePoint Framework Webpart or Sharepoint Framework Extension 
-
-![SPFx 1.11](https://img.shields.io/badge/SPFx-1.11-green.svg)
-
-![Node.js v10](https://img.shields.io/badge/Node.js-10.22.0-green.svg)
+![SPFX](https://img.shields.io/badge/SPFX-1.17.4-green.svg)
+![Node.js](https://img.shields.io/badge/Node.js-v16.3+-green.svg)
 
 ## Applies to
 
