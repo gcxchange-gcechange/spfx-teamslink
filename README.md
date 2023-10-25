@@ -1,10 +1,13 @@
-# Name of the application
+# spfx-teamslink
 
 ## Summary
 
-Short description of what the webpart do. Give the basic information and feature of the app. 
+Use graph API to add a Conversations/Become a member link to community pages on gcxchange based on user membership to group.
 
-_Adding a visualisation is possible. Need to keep in mind that it should only reflect what is provide in the short description. Plus, an short description of the image or animation need to be provide in the alt._
+**_You need to update the hubSiteIds property with comma seperated GUIDs for your valid hubs. You can do so in the serve.json file or from the tenant wide exstensions list when deployed._**
+
+**_You need to update the teamslinkId in TeamsLinkApplicationCustomizer.ts to avoid duplication_**
+
 
 ## Prerequisites
 
