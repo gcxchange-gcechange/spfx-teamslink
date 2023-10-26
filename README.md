@@ -2,16 +2,25 @@
 
 ## Summary
 
-Use graph API to add a Conversations/Become a member link to community pages on gcxchange based on user membership to group.
+teamslink is a SPFX Application Customizer Extension that add a Conversations/Become a member link to community pages on gcxchange based on user membership to group.
 
 **_You need to update the hubSiteIds property with comma seperated GUIDs for your valid hubs. You can do so in the serve.json file or from the tenant wide exstensions list when deployed._**
 
 **_You need to update the teamslinkId in TeamsLinkApplicationCustomizer.ts to avoid duplication_**
 
+**_You need to maitain a SharePoint list and store the value of teams id and teams link of each teams site where you want to apply this extension_**
+
 
 ## Prerequisites
-
 spfx-teamslink is intended to be deployed tenant wide.
+- A SharePoint list should created with the following fields and store the value of teams id and teams link of each teams site where you want to apply this extension. 
+
+Column Name|Field Type
+-------|----
+`Teamslink`|Single line of text
+`TeamsID`|Single line of text
+
+- Created List's URL should given as value of TeamsListUrl in TeamsLinkApplicationCustomizer.ts
 
 ## API permission
 - Microsoft Graph, User.ReadBasic.All
@@ -62,5 +71,4 @@ Version|Date|Comments
   - **Edit the hubSiteIds under the title called TeamsLink**
 
 ## Disclaimer
-
 **THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.**
