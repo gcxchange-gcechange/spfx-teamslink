@@ -36,23 +36,30 @@ Version|Date|Comments
 -------|----|--------
 1.0|Dec 9, 2021|Initial release
 1.1|March 25, 2022|Next release
-
+1.3|October 25, 2023| Upgraded to SPFX 1.17.4
 ## Minimal Path to Awesome
-
 - Clone this repository
 - Ensure that you are at the solution folder
-- In the command-line run:
-  - **npm install**
-  - **gulp serve**
-- You will need to add your client id and azure function to the `clientId` and `url` classs members at the top of the filename.tsx file.
-- To debug in the front end:
-  - go to the `serve.json` file and update `initialPage` to `https://domain-name.sharepoint.com/_layouts/15/workbench.aspx`
-  - Run the command **gulp serve**
-- To deploy: in the command-line run
-  - **gulp bundle --ship**
-  - **gulp package-solution --ship**
-- Add the webpart to your tenant app store
-- Approve the web API permissions
+- Ensure the current version of the Node.js (16.3+)
+  - **in the command-line run:**
+    - **npm install**
+- To debug
+  - go to the `config\serve.json` file and update `pageUrl` to url of any teams site
+  - **in the command-line run:**
+    - **gulp clean**
+    - **gulp serve**
+- To deploy: 
+  - **in the command-line run:**
+    - **gulp clean**
+    - **gulp bundle --ship**
+    - **gulp package-solution --ship**
+
+- Upload the extension from `\sharepoint\solution` to your tenant's app store
+- To add or modify extension properties
+  - **Go to Modern Appcatalog**
+  - **Click ...More features in the left side**
+  - **Open the tenant wide Extension**
+  - **Edit the hubSiteIds under the title called TeamsLink**
 
 ## Disclaimer
 
