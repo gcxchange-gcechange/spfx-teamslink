@@ -35,22 +35,24 @@ export default class TeamsLinkApplicationCustomizer
     return Promise.resolve();
   }
 
-  public async initialize() {
+  public async initialize():Promise<string|void> {
     graph.setup({
-      spfxContext: this.context
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      spfxContext: this.context as any
     });
     // Check if a community site
     if(!this.context.pageContext.legacyPageContext.isHubSite && this.checkHubSiteIds()){
 
-      var teamsUrl =  await this.getTeamURL();
-      let isMember = await this.isMember();
+      const teamsUrl =  await this.getTeamURL();
+      const isMember = await this.isMember();
 
       // Add conversations
       this.render(teamsUrl, isMember);
 
-      var siteHeader = document.querySelector('[data-automationid="SiteHeader"]');
+      const siteHeader = document.querySelector('[data-automationid="SiteHeader"]');
 
-      var context = this;
+      // eslint-disable-next-line @typescript-eslint/no-this-alias
+      const context = this;
       // Watch to see if elements change based on window size
       const observer = new MutationObserver(function(mutations_list) {
         mutations_list.forEach(function(mutation) {
@@ -59,7 +61,7 @@ export default class TeamsLinkApplicationCustomizer
             // Desktop size
             if(added_node.isSameNode(siteHeader.querySelector('[class^="actionsWrapper-"]'))){
               if(!context.linkExists()) {
-                let actionLink = context.createLink(teamsUrl);
+                const actionLink = context.createLink(teamsUrl);
                 actionLink.className = styles.actionLinkBox;
 
                 if(isMember){
@@ -75,7 +77,7 @@ export default class TeamsLinkApplicationCustomizer
             // Mobile size
             } else if(added_node.isSameNode(siteHeader.querySelector('[class^="sideActionsWrapper-"]'))) {
               if(!context.linkExists()) {
-                let actionLink = context.createLink(teamsUrl);
+                const actionLink = context.createLink(teamsUrl);
 
                 if(isMember){
                   actionLink.innerText = strings.conversations;
@@ -101,11 +103,12 @@ export default class TeamsLinkApplicationCustomizer
     }
   }
 
-  public render(teamsUrl, isMember) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public render(teamsUrl:any, isMember:boolean):any {
     if(this.linkExists())
       return;
 
-    let actionLink = this.createLink(teamsUrl);
+    const actionLink = this.createLink(teamsUrl);
     actionLink.className = styles.actionLinkBox;
 
     if(isMember){
@@ -116,7 +119,7 @@ export default class TeamsLinkApplicationCustomizer
       actionLink.setAttribute("aria-label", strings.become);
     }
 
-    let actionsBar = document.querySelector('[class^="actionsWrapper-"]');
+    const actionsBar = document.querySelector('[class^="actionsWrapper-"]');
     if(actionsBar){
       //actionsBar.prepend(spacer);
       actionsBar.prepend(actionLink);
@@ -127,12 +130,12 @@ export default class TeamsLinkApplicationCustomizer
     document.querySelector<HTMLElement>('[class^="ms-Button ms-Button--icon teamsChannelLink-"]').style.display = "none";
   }
 
-  public async getTeamURL() {
-    var TeamsListUrl = "https://devgcx.sharepoint.com/sites/app-reference/_api/lists/GetByTitle('TeamsLink')/items?$top=4000";
-    var noTeamsLink = "NOTEAMSLINK";
-    var groupid = this.context.pageContext.site.group.id._guid;
+  public async getTeamURL():Promise<string|void> {
+    const TeamsListUrl = "https://devgcx.sharepoint.com/sites/app-reference/_api/lists/GetByTitle('TeamsLink')/items?$top=4000";
+    const noTeamsLink = "NOTEAMSLINK";
+    const groupid = this.context.pageContext.site.group.id._guid;
     // Get teams link sharepoint list
-    var url = await this.context.spHttpClient.get(TeamsListUrl,
+    const url = await this.context.spHttpClient.get(TeamsListUrl,
     SPHttpClient.configurations.v1,
     {
       headers: {
@@ -147,11 +150,11 @@ export default class TeamsLinkApplicationCustomizer
           return response.json();
       }
     }).then(function(jsonObject){
-      var TeamsLinksList = jsonObject.value;
+      const TeamsLinksList = jsonObject.value;
       //Get all item and check if matching groupid
-      var teamslink = noTeamsLink
+      let teamslink = noTeamsLink
       for (const item of TeamsLinksList) {
-        if(item.TeamsID == groupid){
+        if(item.TeamsID === groupid){
           teamslink = item.Teamslink
           break;
         } 
@@ -163,12 +166,12 @@ export default class TeamsLinkApplicationCustomizer
     return Promise.resolve(url);
   }
 
-  public async isMember(){
-    var groupid = this.context.pageContext.site.group.id._guid;
+  public async isMember():Promise<boolean>{
+    const groupid = this.context.pageContext.site.group.id._guid;
     let isMember = false;
 
     await graph.me.checkMemberGroups([groupid]).then(res => {
-      if(res[0] == groupid){
+      if(res[0] === groupid){
         isMember = true;
       }
     });
@@ -177,7 +180,7 @@ export default class TeamsLinkApplicationCustomizer
   }
 
   private createLink(teamsUrl): HTMLAnchorElement {
-    let actionLink = document.createElement("a");
+    const actionLink = document.createElement("a");
 
     actionLink.href = teamsUrl;
     actionLink.className = styles.actionsLink;
@@ -188,16 +191,17 @@ export default class TeamsLinkApplicationCustomizer
   }
 
   private linkExists(): boolean {
-    let link = document.getElementById(this.teamslinkId);
+    const link = document.getElementById(this.teamslinkId);
     return link !== null;
   }
 
   // Make sure the hub we're in is one of the approved hubs
   private checkHubSiteIds(): boolean {
-    let context = this;
-    let hubSiteIds = `${this.properties.hubSiteIds}`.replace(/\s/g, '').split(',');
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const context = this;
+    const hubSiteIds = `${this.properties.hubSiteIds}`.replace(/\s/g, '').split(',');
     for(let i = 0; i < hubSiteIds.length; i++) {
-      if(context.context.pageContext.legacyPageContext.hubSiteId == hubSiteIds[i])
+      if(context.context.pageContext.legacyPageContext.hubSiteId === hubSiteIds[i])
         return true;
     }
 
@@ -205,10 +209,10 @@ export default class TeamsLinkApplicationCustomizer
   }
 
   private applyMobileStyle(): void {
-    var actionWrapper = document.querySelector('[data-automationid="SiteHeader"]').querySelector('[class^="sideActionsWrapper-"]') as HTMLElement;
+    const actionWrapper = document.querySelector('[data-automationid="SiteHeader"]').querySelector('[class^="sideActionsWrapper-"]') as HTMLElement;
     actionWrapper.style.display = "inline";
 
-    var moreActions = actionWrapper.querySelector('[class^="moreActionsButton-"]') as HTMLElement;
+    const moreActions = actionWrapper.querySelector('[class^="moreActionsButton-"]') as HTMLElement;
     moreActions.style.display = "inline";
   }
 }
