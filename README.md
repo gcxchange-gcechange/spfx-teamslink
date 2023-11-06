@@ -2,7 +2,7 @@
 
 ## Summary
 
-- spfx-teamslink is a SPFX Application Customizer Extension that add a Conversations/Become a member link to community pages on gcxchange based on user membership to group.
+- spfx-teamslink is a SPFX Application Customizer Extension that add a Conversations/Become a member link to community pages on gcxchange based on user membership to group. It also hide the teams icon next to the title.
 
 - You need to update the hubSiteIds property with comma seperated GUIDs for your valid hubs. You can do so in the serve.json file or from the tenant wide exstensions list when deployed.
 
