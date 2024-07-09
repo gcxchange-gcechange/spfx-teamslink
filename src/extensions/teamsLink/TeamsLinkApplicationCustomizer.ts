@@ -41,6 +41,7 @@ export default class TeamsLinkApplicationCustomizer
       spfxContext: this.context as any
     });
     // Check if a community site
+
     if(!this.context.pageContext.legacyPageContext.isHubSite && this.checkHubSiteIds()){
 
       const teamsUrl =  await this.getTeamURL();
@@ -101,6 +102,12 @@ export default class TeamsLinkApplicationCustomizer
 
       observer.observe(siteHeader, config);
     }
+
+    // Remove teams link channel button beside the community title
+    const teamsChannelButton = document.querySelector<HTMLElement>('[data-automationid="splitbuttonprimary"]');
+    if (teamsChannelButton) {
+      teamsChannelButton.remove();
+    }
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -127,7 +134,7 @@ export default class TeamsLinkApplicationCustomizer
       this.applyMobileStyle();
       document.querySelector('[class^="sideActionsWrapper-"]').prepend(actionLink)
     }
-    document.querySelector<HTMLElement>('[class^="ms-Button ms-Button--icon teamsChannelLink-"]').style.display = "none";
+    //document.querySelector<HTMLElement>('[class^="ms-Button teamsChannelLink-"]').style.display = "none";
   }
 
   public async getTeamURL():Promise<string|void> {
