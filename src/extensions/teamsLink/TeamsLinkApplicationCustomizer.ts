@@ -29,12 +29,19 @@ export default class TeamsLinkApplicationCustomizer
   public async onInit(): Promise<void> {
 
     await super.onInit();
-      
+
     this.context.application.navigatedEvent.add(this, this.initialize);
+
+    console.log("onInit")
+      // Remove teams link channel button beside the community title
+    const teamsChannelButton = document.querySelector('[data-automationid="splitbuttonprimary"]');
+      if (teamsChannelButton) {
+        teamsChannelButton.remove();
+      }
 
     return Promise.resolve();
   }
-
+  
   public async initialize():Promise<string|void> {
     graph.setup({
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -103,11 +110,7 @@ export default class TeamsLinkApplicationCustomizer
       observer.observe(siteHeader, config);
     }
 
-    // Remove teams link channel button beside the community title
-    const teamsChannelButton = document.querySelector<HTMLElement>('[data-automationid="splitbuttonprimary"]');
-    if (teamsChannelButton) {
-      teamsChannelButton.remove();
-    }
+  
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -135,6 +138,7 @@ export default class TeamsLinkApplicationCustomizer
       document.querySelector('[class^="sideActionsWrapper-"]').prepend(actionLink)
     }
     //document.querySelector<HTMLElement>('[class^="ms-Button ms-Button--icon teamsChannelLink-"]').style.display = "none";
+    console.log("render")
   }
 
   public async getTeamURL():Promise<string|void> {
@@ -164,7 +168,7 @@ export default class TeamsLinkApplicationCustomizer
         if(item.TeamsID === groupid){
           teamslink = item.Teamslink
           break;
-        } 
+        }
       }
       return teamslink
     }).catch(function (error) {
@@ -222,4 +226,7 @@ export default class TeamsLinkApplicationCustomizer
     const moreActions = actionWrapper.querySelector('[class^="moreActionsButton-"]') as HTMLElement;
     moreActions.style.display = "inline";
   }
+
+  
+  
 }
