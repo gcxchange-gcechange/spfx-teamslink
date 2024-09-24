@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-floating-promises */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { override } from '@microsoft/decorators';
 import {
   BaseApplicationCustomizer
@@ -13,6 +16,8 @@ import "@pnp/graph/groups";
 import styles from './components/TeamsLink.module.scss';
 
 import { SPHttpClient } from '@microsoft/sp-http';
+import { DisplayMode } from '@microsoft/sp-core-library';
+
 
 export interface ITeamsLinkApplicationCustomizerProperties {
   TeamsListUrl: string;
@@ -20,28 +25,54 @@ export interface ITeamsLinkApplicationCustomizerProperties {
   noTeamsLink: string;
 }
 
+
+
 export default class TeamsLinkApplicationCustomizer
   extends BaseApplicationCustomizer<ITeamsLinkApplicationCustomizerProperties> {
 
   teamslinkId: string = "f3f79be5-ebc1-4ce5-8435-96db86a4eb20";
+  displayMode: DisplayMode;
+
 
   @override
   public async onInit(): Promise<void> {
 
     await super.onInit();
 
-    this.context.application.navigatedEvent.add(this, this.initialize);
+    //this.context.application.navigatedEvent.add(this, this.initialize );
+    this.context.application.navigatedEvent.add(this, () => this.initialize);
+    this.context.application.navigatedEvent.add(this, this.removeTeamsLink);
 
-    console.log("onInit")
-      // Remove teams link channel button beside the community title
-    const teamsChannelButton = document.querySelector('[data-automationid="splitbuttonprimary"]');
-      if (teamsChannelButton) {
-        teamsChannelButton.remove();
-      }
+
+    this.removeTeamsLink();
+
+    console.log("onInit", this.context);
+
 
     return Promise.resolve();
   }
-  
+
+  public removeTeamsLink(): void {
+     // Remove teams link channel button beside the community title
+
+    const interval = window.setInterval(() => {
+    const teamsChannelButton = document.querySelector('button[title="Go to the Microsoft Teams channel"]');
+    const republishButton = document.querySelector('button[name="Republish"');
+
+     console.log(teamsChannelButton)
+
+      if (teamsChannelButton !== null) {
+        teamsChannelButton.remove();
+      } else if(republishButton !== null) {
+        teamsChannelButton.remove();
+        window.clearInterval(interval);
+      }
+
+     }, 3000)
+
+  }
+
+
   public async initialize():Promise<string|void> {
     graph.setup({
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -110,7 +141,7 @@ export default class TeamsLinkApplicationCustomizer
       observer.observe(siteHeader, config);
     }
 
-  
+
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -227,6 +258,18 @@ export default class TeamsLinkApplicationCustomizer
     moreActions.style.display = "inline";
   }
 
-  
-  
+  private checkDisplayMode(): void {
+    if(DisplayMode.Edit) {
+      console.log("EDIT")
+    } else if (DisplayMode.Read) {
+      console.log("READ")
+    }
+  }
+
+  public onDispose(): void {
+    super.onDispose();
+  }
 }
+
+
+
