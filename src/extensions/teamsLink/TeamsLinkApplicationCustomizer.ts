@@ -31,7 +31,6 @@ export default class TeamsLinkApplicationCustomizer
   extends BaseApplicationCustomizer<ITeamsLinkApplicationCustomizerProperties> {
 
   teamslinkId: string = "f3f79be5-ebc1-4ce5-8435-96db86a4eb20";
-  displayMode: DisplayMode;
 
 
   @override
@@ -39,38 +38,45 @@ export default class TeamsLinkApplicationCustomizer
 
     await super.onInit();
 
-    //this.context.application.navigatedEvent.add(this, this.initialize );
     this.context.application.navigatedEvent.add(this, () => this.initialize);
     this.context.application.navigatedEvent.add(this, this.removeTeamsLink);
 
+    window.addEventListener('popstate', function(event) {
+      console.log("EVENTSTATE", event.state)
+    })
+
+
+    window.addEventListener('click', function (event) {
+      const el = event.target as HTMLElement;
+
+      if (el.innerHTML === "Republish" || el.className.includes("ms-Icon ms-Button-icon")) {
+        const interval = window.setInterval(() => {
+        const teamsChannelButton = document.querySelector('button[title="Go to the Microsoft Teams channel"]');
+          if (teamsChannelButton !== null) {
+            teamsChannelButton.remove();
+            clearInterval(interval);
+          }
+
+        }, 1000)
+      }
+    })
 
     this.removeTeamsLink();
 
     console.log("onInit", this.context);
 
-
     return Promise.resolve();
   }
 
-  public removeTeamsLink(): void {
-     // Remove teams link channel button beside the community title
 
-    const interval = window.setInterval(() => {
+
+  public removeTeamsLink():void {
     const teamsChannelButton = document.querySelector('button[title="Go to the Microsoft Teams channel"]');
-    const republishButton = document.querySelector('button[name="Republish"');
-
-     console.log(teamsChannelButton)
-
-      if (teamsChannelButton !== null) {
-        teamsChannelButton.remove();
-      } else if(republishButton !== null) {
-        teamsChannelButton.remove();
-        window.clearInterval(interval);
-      }
-
-     }, 3000)
-
+    if(teamsChannelButton) {
+      teamsChannelButton.remove();
+    }
   }
+
 
 
   public async initialize():Promise<string|void> {
@@ -258,17 +264,8 @@ export default class TeamsLinkApplicationCustomizer
     moreActions.style.display = "inline";
   }
 
-  private checkDisplayMode(): void {
-    if(DisplayMode.Edit) {
-      console.log("EDIT")
-    } else if (DisplayMode.Read) {
-      console.log("READ")
-    }
-  }
 
-  public onDispose(): void {
-    super.onDispose();
-  }
+
 }
 
 
