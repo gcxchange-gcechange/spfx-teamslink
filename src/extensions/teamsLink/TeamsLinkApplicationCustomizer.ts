@@ -41,10 +41,6 @@ export default class TeamsLinkApplicationCustomizer
     this.context.application.navigatedEvent.add(this, () => this.initialize);
     this.context.application.navigatedEvent.add(this, this.removeTeamsLink);
 
-    window.addEventListener('popstate', function(event) {
-      console.log("EVENTSTATE", event.state)
-    })
-
 
     window.addEventListener('click', function (event) {
       const el = event.target as HTMLElement;
