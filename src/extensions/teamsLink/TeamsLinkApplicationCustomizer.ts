@@ -38,19 +38,25 @@ export default class TeamsLinkApplicationCustomizer
 
     await super.onInit();
 
-    this.context.application.navigatedEvent.add(this, () => this.initialize);
+    this.context.application.navigatedEvent.add(this, this.initialize);
     this.context.application.navigatedEvent.add(this, this.removeTeamsLink);
 
 
-    window.addEventListener('click', function (event) {
+    window.addEventListener('click', (event) => {
       const el = event.target as HTMLElement;
 
       if (el.innerHTML === "Republish" || el.className.includes("ms-Icon ms-Button-icon")) {
         const interval = window.setInterval(() => {
         const teamsChannelButton = document.querySelector('button[title="Go to the Microsoft Teams channel"]');
+        const customTeamsButton = document.querySelector(`button[title="${strings.conversations}"]`);
+
           if (teamsChannelButton !== null) {
             teamsChannelButton.remove();
             clearInterval(interval);
+          }
+
+          if (customTeamsButton === null) {
+            this.initialize();
           }
 
         }, 1000)
@@ -72,7 +78,6 @@ export default class TeamsLinkApplicationCustomizer
       teamsChannelButton.remove();
     }
   }
-
 
 
   public async initialize():Promise<string|void> {
@@ -123,9 +128,11 @@ export default class TeamsLinkApplicationCustomizer
                 if(isMember){
                   actionLink.innerText = strings.conversations;
                   actionLink.setAttribute("aria-label", strings.conversations);
+                  actionLink.setAttribute("name", strings.conversations);
                 } else {
                   actionLink.innerText = strings.become;
                   actionLink.setAttribute("aria-label", strings.become);
+
                 }
 
                 context.applyMobileStyle();
@@ -157,9 +164,11 @@ export default class TeamsLinkApplicationCustomizer
     if(isMember){
       actionLink.innerText = strings.conversations;
       actionLink.setAttribute("aria-label", strings.conversations);
+      actionLink.setAttribute("title", strings.conversations);
     } else {
       actionLink.innerText = strings.become;
       actionLink.setAttribute("aria-label", strings.become);
+      actionLink.setAttribute("title", strings.become);
     }
 
     const actionsBar = document.querySelector('[class^="actionsWrapper-"]');
