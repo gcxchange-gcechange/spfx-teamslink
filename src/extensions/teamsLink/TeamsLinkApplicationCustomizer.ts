@@ -114,9 +114,11 @@ export default class TeamsLinkApplicationCustomizer
                 if(isMember){
                   actionLink.innerText = strings.conversations;
                   actionLink.setAttribute("aria-label", strings.conversations);
+                  actionLink.setAttribute("title", strings.conversations);
                 } else {
                   actionLink.innerText = strings.become;
                   actionLink.setAttribute("aria-label", strings.become);
+                  actionLink.setAttribute("title", strings.become);
                 }
 
                 siteHeader.querySelector('[class^="actionsWrapper-"]').prepend(actionLink);
@@ -129,10 +131,11 @@ export default class TeamsLinkApplicationCustomizer
                 if(isMember){
                   actionLink.innerText = strings.conversations;
                   actionLink.setAttribute("aria-label", strings.conversations);
-                  actionLink.setAttribute("name", strings.conversations);
+                  actionLink.setAttribute("title", strings.conversations);
                 } else {
                   actionLink.innerText = strings.become;
                   actionLink.setAttribute("aria-label", strings.become);
+                  actionLink.setAttribute("title", strings.become);
 
                 }
 
