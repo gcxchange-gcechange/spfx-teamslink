@@ -45,7 +45,7 @@ export default class TeamsLinkApplicationCustomizer
     window.addEventListener('click', (event) => {
       const el = event.target as HTMLElement;
 
-      if (el.innerHTML === "Republish" || el.className.includes("ms-Icon ms-Button-icon")) {
+      if (el.innerHTML === "Republish" || el.className.includes("ms-Icon ms-Button-icon") || el.className.includes("ms-Icon--ChromeClose")) {
         const interval = window.setInterval(() => {
         const teamsChannelButton = document.querySelector('button[title="Go to the Microsoft Teams channel"]');
         const customTeamsButton = document.querySelector(`button[title="${strings.conversations}"]`);
@@ -56,6 +56,7 @@ export default class TeamsLinkApplicationCustomizer
           }
 
           if (customTeamsButton === null) {
+            console.log("Button NULL? - ",customTeamsButton)
             this.initialize();
           }
 
