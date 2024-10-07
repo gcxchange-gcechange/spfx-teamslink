@@ -41,7 +41,7 @@ export default class TeamsLinkApplicationCustomizer
 
     return Promise.resolve();
   }
-  
+
   public async initialize():Promise<string|void> {
     graph.setup({
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -58,13 +58,25 @@ export default class TeamsLinkApplicationCustomizer
       this.render(teamsUrl, isMember);
 
       const siteHeader = document.querySelector('[data-automationid="SiteHeader"]');
+      const layoutOption = siteHeader.attributes[2].value;
+
+      console.log("OPTION", layoutOption);
+      if (layoutOption === "1") {
+        const getSideHeader = siteHeader.lastElementChild.classList;
+        console.log("GET",getSideHeader);
+      }
+
+
 
       // eslint-disable-next-line @typescript-eslint/no-this-alias
       const context = this;
       // Watch to see if elements change based on window size
       const observer = new MutationObserver(function(mutations_list) {
+        console.log("mutationList", mutations_list);
         mutations_list.forEach(function(mutation) {
+          console.log("mutation", mutation);
           mutation.addedNodes.forEach(function(added_node) {
+            console.log("added_node",added_node)
 
             // Desktop size
             if(added_node.isSameNode(siteHeader.querySelector('[class^="actionsWrapper-"]'))){
@@ -110,7 +122,7 @@ export default class TeamsLinkApplicationCustomizer
       observer.observe(siteHeader, config);
     }
 
-  
+
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -221,12 +233,14 @@ export default class TeamsLinkApplicationCustomizer
 
   private applyMobileStyle(): void {
     const actionWrapper = document.querySelector('[data-automationid="SiteHeader"]').querySelector('[class^="sideActionsWrapper-"]') as HTMLElement;
-    actionWrapper.style.display = "inline";
+    if(actionWrapper) {
+      actionWrapper.style.display = "inline";
+    }
 
     const moreActions = actionWrapper.querySelector('[class^="moreActionsButton-"]') as HTMLElement;
-    moreActions.style.display = "inline";
-  }
 
-  
-  
+    if(moreActions){
+      moreActions.style.display = "inline";
+    }
+  }
 }
