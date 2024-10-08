@@ -56,7 +56,6 @@ export default class TeamsLinkApplicationCustomizer
           }
 
           if (customTeamsButton === null) {
-            console.log("Button NULL? - ",customTeamsButton)
             this.initialize();
           }
 
@@ -100,13 +99,10 @@ export default class TeamsLinkApplicationCustomizer
       const siteHeader = document.querySelector('[data-automationid="SiteHeader"]');
       const layoutOption = siteHeader.attributes[2].value;
 
-      console.log("OPTION", layoutOption);
       if (layoutOption === "1") {
-        const getSideHeader = siteHeader.lastElementChild.classList;
-        console.log("GET",getSideHeader);
+        siteHeader.lastElementChild.removeAttribute('style');
+        siteHeader.lastElementChild.classList.add(styles.inLineMenu);
       }
-
-
 
       // eslint-disable-next-line @typescript-eslint/no-this-alias
       const context = this;
@@ -166,9 +162,6 @@ export default class TeamsLinkApplicationCustomizer
 
       observer.observe(siteHeader, config);
     }
-
-
-
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
