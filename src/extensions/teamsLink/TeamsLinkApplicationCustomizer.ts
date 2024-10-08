@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-floating-promises */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { override } from '@microsoft/decorators';
 import {
   BaseApplicationCustomizer
@@ -13,6 +16,8 @@ import "@pnp/graph/groups";
 import styles from './components/TeamsLink.module.scss';
 
 import { SPHttpClient } from '@microsoft/sp-http';
+import { DisplayMode } from '@microsoft/sp-core-library';
+
 
 export interface ITeamsLinkApplicationCustomizerProperties {
   TeamsListUrl: string;
@@ -20,10 +25,13 @@ export interface ITeamsLinkApplicationCustomizerProperties {
   noTeamsLink: string;
 }
 
+
+
 export default class TeamsLinkApplicationCustomizer
   extends BaseApplicationCustomizer<ITeamsLinkApplicationCustomizerProperties> {
 
   teamslinkId: string = "f3f79be5-ebc1-4ce5-8435-96db86a4eb20";
+
 
   @override
   public async onInit(): Promise<void> {
@@ -31,16 +39,48 @@ export default class TeamsLinkApplicationCustomizer
     await super.onInit();
 
     this.context.application.navigatedEvent.add(this, this.initialize);
+    this.context.application.navigatedEvent.add(this, this.removeTeamsLink);
 
-    console.log("onInit")
-      // Remove teams link channel button beside the community title
-    const teamsChannelButton = document.querySelector('[data-automationid="splitbuttonprimary"]');
-      if (teamsChannelButton) {
-        teamsChannelButton.remove();
+
+    window.addEventListener('click', (event) => {
+      const el = event.target as HTMLElement;
+
+      if (el.innerHTML === "Republish" || el.className.includes("ms-Icon ms-Button-icon") || el.className.includes("ms-Icon--ChromeClose")) {
+        const interval = window.setInterval(() => {
+        const teamsChannelButton = document.querySelector('button[title="Go to the Microsoft Teams channel"]');
+        const customTeamsButton = document.querySelector(`button[title="${strings.conversations}"]`);
+
+          if (teamsChannelButton !== null) {
+            teamsChannelButton.remove();
+            clearInterval(interval);
+          }
+
+          if (customTeamsButton === null) {
+            console.log("Button NULL? - ",customTeamsButton)
+            this.initialize();
+          }
+
+        }, 1000)
       }
+    })
+
+    this.removeTeamsLink();
+
+    console.log("onInit", this.context);
 
     return Promise.resolve();
   }
+
+
+
+
+  public removeTeamsLink():void {
+    const teamsChannelButton = document.querySelector('button[title="Go to the Microsoft Teams channel"]');
+    if(teamsChannelButton) {
+      teamsChannelButton.remove();
+    }
+  }
+
 
   public async initialize():Promise<string|void> {
     graph.setup({
@@ -87,9 +127,11 @@ export default class TeamsLinkApplicationCustomizer
                 if(isMember){
                   actionLink.innerText = strings.conversations;
                   actionLink.setAttribute("aria-label", strings.conversations);
+                  actionLink.setAttribute("title", strings.conversations);
                 } else {
                   actionLink.innerText = strings.become;
                   actionLink.setAttribute("aria-label", strings.become);
+                  actionLink.setAttribute("title", strings.become);
                 }
 
                 siteHeader.querySelector('[class^="actionsWrapper-"]').prepend(actionLink);
@@ -102,9 +144,12 @@ export default class TeamsLinkApplicationCustomizer
                 if(isMember){
                   actionLink.innerText = strings.conversations;
                   actionLink.setAttribute("aria-label", strings.conversations);
+                  actionLink.setAttribute("title", strings.conversations);
                 } else {
                   actionLink.innerText = strings.become;
                   actionLink.setAttribute("aria-label", strings.become);
+                  actionLink.setAttribute("title", strings.become);
+
                 }
 
                 context.applyMobileStyle();
@@ -123,6 +168,7 @@ export default class TeamsLinkApplicationCustomizer
     }
 
 
+
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -136,9 +182,11 @@ export default class TeamsLinkApplicationCustomizer
     if(isMember){
       actionLink.innerText = strings.conversations;
       actionLink.setAttribute("aria-label", strings.conversations);
+      actionLink.setAttribute("title", strings.conversations);
     } else {
       actionLink.innerText = strings.become;
       actionLink.setAttribute("aria-label", strings.become);
+      actionLink.setAttribute("title", strings.become);
     }
 
     const actionsBar = document.querySelector('[class^="actionsWrapper-"]');
@@ -243,4 +291,10 @@ export default class TeamsLinkApplicationCustomizer
       moreActions.style.display = "inline";
     }
   }
+
+
+
 }
+
+
+
