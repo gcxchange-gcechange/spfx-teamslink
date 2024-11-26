@@ -43,3 +43,9 @@
     color:#004B85;
   }
 }
+
+.inLineMenu {
+  display: flex;
+  flex-direction:row!important;
+  align-items:baseline!important;
+}
