@@ -223,9 +223,15 @@ export default class TeamsLinkApplicationCustomizer
 
           // redirect to a valid "Join MS Teams" URL patch 
           // due to MS Teams moving on from legacy redirect
-          
-          if (teamslink.includes("_#/1/team/")) {
-            teamslink = teamslink.replace("_#/", "");
+
+          if (teamslink.includes("/v2/#/l/team/")) {
+            teamslink = teamslink.replace("/v2/#/", "/");
+          } 
+          else if (teamslink.includes("_#/l/team/")) {
+            teamslink = teamslink.replace("_#/", "/");
+          } 
+          else if (teamslink.includes("#/l/team/")) {
+            teamslink = teamslink.replace("#/", "/");
           }
           if (!teamslink.includes("web=1")) {
             const separator = teamslink.includes("?") ? "&" : "?";
