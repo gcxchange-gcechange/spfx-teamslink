@@ -219,7 +219,19 @@ export default class TeamsLinkApplicationCustomizer
       let teamslink = noTeamsLink
       for (const item of TeamsLinksList) {
         if(item.TeamsID === groupid){
-          teamslink = item.Teamslink
+          teamslink = item.Teamslink;
+
+          // redirect to a valid "Join MS Teams" URL patch 
+          // due to MS Teams moving on from legacy redirect
+          
+          if (teamslink.includes("_#/1/team/")) {
+            teamslink = teamslink.replace("_#/", "");
+          }
+          if (!teamslink.includes("web=1")) {
+            const separator = teamslink.includes("?") ? "&" : "?";
+            teamslink += `${separator}web=1`;
+          }
+
           break;
         }
       }
