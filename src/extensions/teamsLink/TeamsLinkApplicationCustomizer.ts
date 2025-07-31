@@ -241,10 +241,9 @@ export default class TeamsLinkApplicationCustomizer
             teamslink = teamslink.replace("#/", "/");
           }
           
-          const hasQuery = teamslink.includes("?");
-          const separator = hasQuery ? "&" : "?";
+          const separator = teamslink.includes ("?") ? "&" : "?";
           if (!teamslink.includes("web=1")) {
-            teamslink +- `${separator}web=1&launchAgent=webapp`;
+            teamslink += `${separator}web=1&launchAgent=webapp`;
           }
           else if (!teamslink.includes("launchAgent=webapp")) {
             teamslink += `&launchAgent=webapp`;
@@ -252,7 +251,7 @@ export default class TeamsLinkApplicationCustomizer
           break;
         }
       }
-      return teamslink
+      return teamslink !== noTeamsLink ? teamslink : undefined;
     }).catch(function (error) {
       console.log(`Error:${error}`);
     });
