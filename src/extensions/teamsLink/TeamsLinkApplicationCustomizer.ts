@@ -221,6 +221,13 @@ export default class TeamsLinkApplicationCustomizer
         if(item.TeamsID === groupid){
           teamslink = item.Teamslink;
 
+          // launcher.html format being used, in order to mitigate that we have the following solution
+          
+          if (teamslink.includes("launcher/launcher.html?url=")) {
+            const joinUrl = decodeURIComponent(teamslink.split("url=")[1].split("&")[0]);
+            teamslink = 'https://teams.microsoft.com${joinUrl}';
+          }
+
           // redirect to a valid "Join MS Teams" URL patch 
           // due to MS Teams moving on from legacy redirect
 
