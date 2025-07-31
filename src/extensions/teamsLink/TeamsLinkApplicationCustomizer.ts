@@ -235,9 +235,11 @@ export default class TeamsLinkApplicationCustomizer
           }
           if (!teamslink.includes("web=1")) {
             const separator = teamslink.includes("?") ? "&" : "?";
-            teamslink += `${separator}web=1`;
+            teamslink += `${separator}web=1&launchAgent=webapp`;
           }
-
+          else if (!teamslink.includes("launchAgent=webapp")) {
+            teamslink += "&launchAgent=webapp";
+          }
           break;
         }
       }
