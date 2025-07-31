@@ -224,8 +224,14 @@ export default class TeamsLinkApplicationCustomizer
           // launcher.html format being used, in order to mitigate that we have the following solution
           
           if (teamslink.includes("launcher/launcher.html?url=")) {
-            const joinUrl = decodeURIComponent(teamslink.split("url=")[1].split("&")[0]);
-            teamslink = 'https://teams.microsoft.com${joinUrl}';
+            try {
+              const params = new URLSearchParams(teamslink.split("?")[1]);
+              const decodedPath = decodeURIComponent(params.get("url") || "");
+              teamslink = `https://teams.microsoft.com${decodedPath}`;
+            } 
+            catch (e) {
+              console.error("Failed to decode launcher link:", e);
+            }
           }
 
           // redirect to a valid "Join MS Teams" URL patch 
