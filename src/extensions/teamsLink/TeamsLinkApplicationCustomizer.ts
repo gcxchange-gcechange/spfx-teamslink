@@ -216,7 +216,7 @@ export default class TeamsLinkApplicationCustomizer
     }).then(function(jsonObject){
       const TeamsLinksList = jsonObject.value;
       //Get all item and check if matching groupid
-      let teamslink = noTeamsLink
+      let teamslink = noTeamsLink;
       for (const item of TeamsLinksList) {
         if(item.TeamsID === groupid){
           teamslink = item.Teamslink;
@@ -240,12 +240,14 @@ export default class TeamsLinkApplicationCustomizer
           else if (teamslink.includes("#/l/team/")) {
             teamslink = teamslink.replace("#/", "/");
           }
+          
+          const hasQuery = teamslink.includes("?");
+          const separator = hasQuery ? "&" : "?";
           if (!teamslink.includes("web=1")) {
-            const separator = teamslink.includes("?") ? "&" : "?";
-            teamslink += `${separator}web=1&launchAgent=webapp`;
+            teamslink +- `${separator}web=1&launchAgent=webapp`;
           }
           else if (!teamslink.includes("launchAgent=webapp")) {
-            teamslink += "&launchAgent=webapp";
+            teamslink += `&launchAgent=webapp`;
           }
           break;
         }
