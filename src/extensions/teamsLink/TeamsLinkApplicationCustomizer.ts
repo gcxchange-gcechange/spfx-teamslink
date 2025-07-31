@@ -275,11 +275,15 @@ export default class TeamsLinkApplicationCustomizer
   private createLink(teamsUrl): HTMLAnchorElement {
     const actionLink = document.createElement("a");
 
-    actionLink.href = teamsUrl;
+    actionLink.href = "#";
     actionLink.className = styles.actionsLink;
     actionLink.target = "_blank";
     actionLink.id = this.teamslinkId;
 
+    actionLink.addEventListener("click", (event) => {
+      event.preventDefault();
+      window.open(teamsUrl, "_blank", "noopener,noreferrer");
+    });
     return actionLink;
   }
 
