@@ -216,14 +216,48 @@ export default class TeamsLinkApplicationCustomizer
     }).then(function(jsonObject){
       const TeamsLinksList = jsonObject.value;
       //Get all item and check if matching groupid
-      let teamslink = noTeamsLink
+      let teamslink = noTeamsLink;
       for (const item of TeamsLinksList) {
         if(item.TeamsID === groupid){
-          teamslink = item.Teamslink
+          teamslink = item.Teamslink;
+
+          // launcher.html format being used, in order to mitigate that we have the following solution
+          
+          if (teamslink.includes("launcher/launcher.html?url=")) {
+            try {
+              const params = new URLSearchParams(teamslink.split("?")[1]);
+              const decodedPath = decodeURIComponent(params.get("url") || "");
+              teamslink = `https://teams.microsoft.com${decodedPath}`;
+            } 
+            catch (e) {
+              console.error("Failed to decode launcher link:", e);
+            }
+          }
+
+          // redirect to a valid "Join MS Teams" URL patch 
+          // due to MS Teams moving on from legacy redirect
+
+          if (teamslink.includes("/v2/#/l/team/")) {
+            teamslink = teamslink.replace("/v2/#/", "/");
+          } 
+          else if (teamslink.includes("_#/l/team/")) {
+            teamslink = teamslink.replace("_#/", "/");
+          } 
+          else if (teamslink.includes("#/l/team/")) {
+            teamslink = teamslink.replace("#/", "/");
+          }
+          
+          const separator = teamslink.includes ("?") ? "&" : "?";
+          if (!teamslink.includes("web=1")) {
+            teamslink += `${separator}web=1&launchAgent=webapp`;
+          }
+          else if (!teamslink.includes("launchAgent=webapp")) {
+            teamslink += `&launchAgent=webapp`;
+          }
           break;
         }
       }
-      return teamslink
+      return teamslink !== noTeamsLink ? teamslink : undefined;
     }).catch(function (error) {
       console.log(`Error:${error}`);
     });
@@ -246,11 +280,15 @@ export default class TeamsLinkApplicationCustomizer
   private createLink(teamsUrl): HTMLAnchorElement {
     const actionLink = document.createElement("a");
 
-    actionLink.href = teamsUrl;
+    actionLink.href = "#";
     actionLink.className = styles.actionsLink;
     actionLink.target = "_blank";
     actionLink.id = this.teamslinkId;
 
+    actionLink.addEventListener("click", (event) => {
+      event.preventDefault();
+      window.open(teamsUrl, "_blank", "noopener,noreferrer");
+    });
     return actionLink;
   }
 
