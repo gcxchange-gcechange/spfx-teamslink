@@ -59,8 +59,29 @@ export default class TeamsLinkApplicationCustomizer
           //   this.initialize();
           // }
 
-        }, 1000)
+        }, 1000);
       }
+    });
+
+    window.addEventListener('resize', (event) => {
+      const maxTime = 5000;
+      const intervalTime = 1000;
+      let timeElapsed = 0;
+
+      const interval = window.setInterval(() => {
+        const teamsChannelButton = document.querySelector('button[title="Go to the Microsoft Teams channel"]');
+
+        if (teamsChannelButton !== null) {
+          teamsChannelButton.remove();
+          clearInterval(interval);
+        }
+
+        timeElapsed += intervalTime;
+
+        if (maxTime === timeElapsed)
+          clearInterval(interval);
+
+      }, intervalTime);
     });
 
     this.removeTeamsLink();
@@ -77,7 +98,6 @@ export default class TeamsLinkApplicationCustomizer
       teamsChannelButton.remove();
     }
   }
-
 
   public async initialize():Promise<string|void> {
     graph.setup({
