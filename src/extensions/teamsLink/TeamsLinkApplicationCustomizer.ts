@@ -38,7 +38,7 @@ export default class TeamsLinkApplicationCustomizer
 
     await super.onInit();
 
-    this.context.application.navigatedEvent.add(this, this.initialize);
+    //this.context.application.navigatedEvent.add(this, this.initialize);
     this.context.application.navigatedEvent.add(this, this.removeTeamsLink);
 
 
@@ -48,24 +48,22 @@ export default class TeamsLinkApplicationCustomizer
       if (el.innerHTML === "Republish" || el.className.includes("ms-Icon ms-Button-icon") || el.className.includes("ms-Icon--ChromeClose")) {
         const interval = window.setInterval(() => {
         const teamsChannelButton = document.querySelector('button[title="Go to the Microsoft Teams channel"]');
-        const customTeamsButton = document.querySelector(`button[title="${strings.conversations}"]`);
+        //const customTeamsButton = document.querySelector(`button[title="${strings.conversations}"]`);
 
           if (teamsChannelButton !== null) {
             teamsChannelButton.remove();
             clearInterval(interval);
           }
 
-          if (customTeamsButton === null) {
-            this.initialize();
-          }
+          // if (customTeamsButton === null) {
+          //   this.initialize();
+          // }
 
         }, 1000)
       }
-    })
+    });
 
     this.removeTeamsLink();
-
-    console.log("onInit", this.context);
 
     return Promise.resolve();
   }
