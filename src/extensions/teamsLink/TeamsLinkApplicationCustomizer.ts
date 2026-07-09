@@ -63,25 +63,34 @@ export default class TeamsLinkApplicationCustomizer
       }
     });
 
-    window.addEventListener('resize', (event) => {
-      const maxTime = 5000;
-      const intervalTime = 1000;
-      let timeElapsed = 0;
+    let resizeTimeout: number;
 
-      const interval = window.setInterval(() => {
-        const teamsChannelButton = document.querySelector('button[title="Go to the Microsoft Teams channel"]');
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimeout);
 
-        if (teamsChannelButton !== null) {
-          teamsChannelButton.remove();
-          clearInterval(interval);
-        }
+      resizeTimeout = window.setTimeout(() => {
+        const maxTime = 5000;
+        const intervalTime = 1000;
+        let timeElapsed = 0;
 
-        timeElapsed += intervalTime;
+        const interval = window.setInterval(() => {
+          const teamsChannelButton = document.querySelector(
+            'button[title="Go to the Microsoft Teams channel"]'
+          );
 
-        if (maxTime === timeElapsed)
-          clearInterval(interval);
+          if (teamsChannelButton) {
+            teamsChannelButton.remove();
+            clearInterval(interval);
+            return;
+          }
 
-      }, intervalTime);
+          timeElapsed += intervalTime;
+
+          if (timeElapsed >= maxTime) {
+            clearInterval(interval);
+          }
+        }, intervalTime);
+      }, 200);
     });
 
     this.removeTeamsLink();
